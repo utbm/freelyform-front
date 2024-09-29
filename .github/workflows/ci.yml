@@ -1,4 +1,4 @@
-name: CI
+name: CI with Docker Compose
 
 on:
   push:
@@ -21,22 +21,15 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install Docker
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker.io
-
-      - name: Install Docker Compose
-        run: |
-          curl -L "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-          docker-compose --version
-
       - name: Install dependencies
         run: npm install
 
+      - name: Docker Compose Action
+        uses: hoverkraft-tech/compose-action@v2.0.2
+        with:
+          compose-file: "docker-compose.dev.yml"
+          services: "app"
+          up-flags: "--build"
+
       - name: Run tests
         run: npm run test
-
-      - name: Build Docker image for development
-        run: docker-compose -f docker-compose.dev.yml build
