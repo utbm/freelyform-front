@@ -16,13 +16,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: "22"
+          cache: "pnpm"
 
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
 
       - name: Docker Compose Action
         uses: hoverkraft-tech/compose-action@v2.0.2
@@ -32,4 +38,4 @@ jobs:
           up-flags: "--build"
 
       - name: Run tests
-        run: npm run test
+        run: pnpm run test
