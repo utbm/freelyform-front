@@ -17,7 +17,7 @@ import { siteConfig } from "@/config/site";
 import { GithubIcon, Logo } from "@/components/icons";
 import { ThemeSwitch } from "@/components/theme-switch";
 
-export const Navbar = () => {
+export const PrivateNavbar = () => {
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
