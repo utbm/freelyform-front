@@ -106,10 +106,10 @@ export function GridPattern({
     >
       <defs>
         <pattern
-          id={id}
-          width={width}
           height={height}
+          id={id}
           patternUnits="userSpaceOnUse"
+          width={width}
           x={x}
           y={y}
         >
@@ -120,26 +120,26 @@ export function GridPattern({
           />
         </pattern>
       </defs>
-      <rect width="100%" height="100%" fill={`url(#${id})`} />
-      <svg x={x} y={y} className="overflow-visible">
+      <rect fill={`url(#${id})`} height="100%" width="100%" />
+      <svg className="overflow-visible" x={x} y={y}>
         {squares.map(({ pos: [x, y], id }, index) => (
           <motion.rect
-            initial={{ opacity: 0 }}
+            key={`${x}-${y}-${index}`}
             animate={{ opacity: maxOpacity }}
+            fill="currentColor"
+            height={height - 1}
+            initial={{ opacity: 0 }}
+            strokeWidth="0"
             transition={{
               duration,
               repeat: 1,
               delay: index * 0.1,
               repeatType: "reverse",
             }}
-            onAnimationComplete={() => updateSquarePosition(id)}
-            key={`${x}-${y}-${index}`}
             width={width - 1}
-            height={height - 1}
             x={x * width + 1}
             y={y * height + 1}
-            fill="currentColor"
-            strokeWidth="0"
+            onAnimationComplete={() => updateSquarePosition(id)}
           />
         ))}
       </svg>

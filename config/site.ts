@@ -3,8 +3,7 @@ export type SiteConfig = typeof siteConfig;
 export const siteConfig = {
   name: "FreelyForm",
   description: "Create custom forms and surveys with ease.",
-  navItems: [
-  ],
+  navItems: [],
   navMenuItems: [
     {
       label: "Logout",

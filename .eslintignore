@@ -2,6 +2,8 @@
 *.css
 .changeset
 dist
+components/ui
+components/ui/*
 esm/*
 public/*
 tests/*

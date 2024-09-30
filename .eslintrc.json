@@ -5,6 +5,7 @@
     "es2021": true,
     "node": true
   },
+  "ignorePatterns": ["components/ui"],
   "extends": [
     "plugin:react/recommended",
     "plugin:prettier/recommended",

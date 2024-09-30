@@ -1,20 +1,22 @@
 import * as React from "react";
-import Image from 'next/image';
+import Image from "next/image";
 
 import { IconSvgProps } from "@/types";
 
 export const Logo: React.FC<IconSvgProps> = ({ size = 36, ...props }) => {
   const numericSize = Number(size); // Ensure it's a number
+
   return (
-        <Image
-              src="/logo.svg"  // Path to your SVG in the public folder
-              alt="Logo"
-              // @ts-ignore
-              width={numericSize}
-              // @ts-ignore
-              height={numericSize}
-              {...props}
-        />
+    <Image
+      alt="Logo"
+      // @ts-ignore
+      height={numericSize} // Path to your SVG in the public folder
+      // @ts-ignore
+      src="/logo.svg"
+      // @ts-ignore
+      width={numericSize}
+      {...props}
+    />
   );
 };
 

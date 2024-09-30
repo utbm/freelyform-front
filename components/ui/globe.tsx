@@ -57,6 +57,7 @@ export default function Globe({
   const updateMovement = (clientX: any) => {
     if (pointerInteracting.current !== null) {
       const delta = clientX - pointerInteracting.current;
+
       pointerInteractionMovement.current = delta;
       setR(delta / 200);
     }
@@ -90,6 +91,7 @@ export default function Globe({
     });
 
     setTimeout(() => (canvasRef.current!.style.opacity = "1"));
+
     return () => globe.destroy();
   }, []);
 
@@ -101,18 +103,18 @@ export default function Globe({
       )}
     >
       <canvas
+        ref={canvasRef}
         className={cn(
           "size-full opacity-0 transition-opacity duration-500 [contain:layout_paint_size]",
         )}
-        ref={canvasRef}
+        onMouseMove={(e) => updateMovement(e.clientX)}
         onPointerDown={(e) =>
           updatePointerInteraction(
             e.clientX - pointerInteractionMovement.current,
           )
         }
-        onPointerUp={() => updatePointerInteraction(null)}
         onPointerOut={() => updatePointerInteraction(null)}
-        onMouseMove={(e) => updateMovement(e.clientX)}
+        onPointerUp={() => updatePointerInteraction(null)}
         onTouchMove={(e) =>
           e.touches[0] && updateMovement(e.touches[0].clientX)
         }
