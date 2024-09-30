@@ -26,16 +26,16 @@ npx create-next-app -e https://github.com/nextui-org/next-app-template
 
 ### Install dependencies
 
-You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
+Use pnpm :
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### Run the development server
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 ### Setup pnpm (optional)
