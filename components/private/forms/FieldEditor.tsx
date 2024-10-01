@@ -8,6 +8,8 @@ import { Input, Select, Checkbox, Button, SelectItem } from "@nextui-org/react";
 import { FaTimes } from 'react-icons/fa';
 import { FormField } from "@/types/FormTypes";
 import { InputType } from "@/types/FormEnums";
+import { Switch } from "@nextui-org/switch";
+import { getInputTypeDisplay, getInputTypeIcon } from "@/lib/utils";
 
 interface FieldEditorProps {
   field: FormField;
@@ -20,8 +22,6 @@ const FieldEditor: React.FC<FieldEditorProps> = ({
                                                    onUpdateField,
                                                    onRemoveField,
                                                  }) => {
-  const [showValidationRules, setShowValidationRules] = useState(false);
-
   const handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onUpdateField({ ...field, label: e.target.value });
   };
@@ -53,6 +53,7 @@ const FieldEditor: React.FC<FieldEditorProps> = ({
         <div className="w-full md:w-1/4 md:pr-2">
           <Input
             fullWidth
+            size="sm"
             label="Name"
             placeholder="Enter field name"
             value={field.label}
@@ -62,6 +63,7 @@ const FieldEditor: React.FC<FieldEditorProps> = ({
         <div className="w-full md:w-1/4 md:px-2">
           <Select
             label="Type"
+            size="sm"
             placeholder="Select field type"
             selectedKeys={new Set([field.type])}
             onSelectionChange={(keys) =>
@@ -69,27 +71,38 @@ const FieldEditor: React.FC<FieldEditorProps> = ({
             }
           >
             {Object.values(InputType).map((type) => (
-              <SelectItem key={type}>{type}</SelectItem>
+              <SelectItem key={type}>{getInputTypeIcon(type) + " " + getInputTypeDisplay(type)}</SelectItem>
             ))}
           </Select>
         </div>
         <div className="w-full md:w-1/6 md:px-2 flex items-center">
-          <Button
-            size="sm"
-            onPress={() => setShowValidationRules(!showValidationRules)}
-          >
-            Rules
-          </Button>
+          <ValidationRulesEditor
+            validationRules={field.validationRules || []}
+            onUpdateValidationRules={(validationRules) => {
+              onUpdateField({ ...field, validationRules });
+            }}
+            inputType={field.type}
+          />
         </div>
         <div className="w-1/6 md:px-2 flex items-center">
-          <Checkbox isSelected={field.optional} onChange={toggleOptional}>
+          <Switch
+            size="sm"
+            color="success"
+            isSelected={field.optional}
+            onChange={toggleOptional}
+          >
             Optional
-          </Checkbox>
+          </Switch>
         </div>
         <div className="w-1/6 md:pl-2 flex items-center">
-          <Checkbox isSelected={field.hidden} onChange={toggleHidden}>
+          <Switch
+            size="sm"
+            color="success"
+            isSelected={field.hidden}
+            onChange={toggleHidden}
+          >
             Hidden
-          </Checkbox>
+          </Switch>
         </div>
       </div>
       {field.type === InputType.MULTIPLE_CHOICE && (
@@ -97,14 +110,6 @@ const FieldEditor: React.FC<FieldEditorProps> = ({
           choices={field.options?.choices || []}
           onUpdateChoices={(choices) => {
             onUpdateField({ ...field, options: { ...field.options, choices } });
-          }}
-        />
-      )}
-      {showValidationRules && (
-        <ValidationRulesEditor
-          validationRules={field.validationRules || []}
-          onUpdateValidationRules={(validationRules) => {
-            onUpdateField({ ...field, validationRules });
           }}
         />
       )}

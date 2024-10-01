@@ -49,8 +49,8 @@ const FormEditor: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1>Create Form</h1>
+    <div className="container mx-auto p-4 !pt-2">
+      <h1 className="text-xl">Create Form</h1>
       <div className="mt-4">
         <Input
           fullWidth
@@ -73,12 +73,12 @@ const FormEditor: React.FC = () => {
         <Input
           fullWidth
           label="Tags (comma separated)"
-          placeholder="tag1,tag2,tag3"
+          placeholder="tag1, tag2, tag3"
           value={form.tags?.join(',')}
           onChange={handleTagsChange}
         />
       </div>
-      <h2 className="mt-8">
+      <h2 className="mt-8 text-xl">
         Groups
       </h2>
       {form.groups.map((group, index) => (

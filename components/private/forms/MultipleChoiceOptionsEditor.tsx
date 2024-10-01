@@ -1,9 +1,9 @@
 // components/private/forms/MultipleChoiceOptionsEditor.tsx
 "use client";
 
-import React, { useState } from 'react';
-import { Input, Button } from '@nextui-org/react';
-import { FaTimes } from 'react-icons/fa';
+import React, { useState } from "react";
+import { Input, Button } from "@nextui-org/react";
+import { FaTimes } from "react-icons/fa";
 
 interface MultipleChoiceOptionsEditorProps {
   choices: string[];
@@ -12,14 +12,14 @@ interface MultipleChoiceOptionsEditorProps {
 
 const MultipleChoiceOptionsEditor: React.FC<MultipleChoiceOptionsEditorProps> = ({
                                                                                    choices,
-                                                                                   onUpdateChoices,
+                                                                                   onUpdateChoices
                                                                                  }) => {
-  const [newChoice, setNewChoice] = useState('');
+  const [newChoice, setNewChoice] = useState("");
 
   const addChoice = () => {
-    if (newChoice.trim() !== '') {
+    if (newChoice.trim() !== "") {
       onUpdateChoices([...choices, newChoice.trim()]);
-      setNewChoice('');
+      setNewChoice("");
     }
   };
 
@@ -48,6 +48,7 @@ const MultipleChoiceOptionsEditor: React.FC<MultipleChoiceOptionsEditorProps> = 
       <div className="mt-4">
         <Input
           fullWidth
+          size="sm"
           label="New Choice"
           placeholder="Enter new choice"
           value={newChoice}
