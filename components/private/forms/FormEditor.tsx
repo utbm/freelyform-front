@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Input, Textarea, Button, Spacer } from '@nextui-org/react';
+import { Input, Textarea, Button } from '@nextui-org/react';
 import { Form, FormGroup } from "@/types/FormTypes";
 import GroupEditor from "@/components/private/forms/GroupEditor";
 
@@ -18,8 +18,8 @@ const FormEditor: React.FC = () => {
     setForm({ ...form, name: e.target.value });
   };
 
-  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setForm({ ...form, description: e.target.value });
+  const handleDescriptionChange = (value: string) => {
+    setForm({ ...form, description: value });
   };
 
   const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,9 +48,14 @@ const FormEditor: React.FC = () => {
     setForm({ ...form, groups: updatedGroups });
   };
 
+  // Handle form submission
+  const handleSubmit = () => {
+    console.log('Form data:', form);
+  };
+
   return (
     <div className="container mx-auto p-4 !pt-2">
-      <h1 className="text-xl">Create Form</h1>
+      <h1 className="text-3xl">Create Form</h1>
       <div className="mt-4">
         <Input
           fullWidth
@@ -66,7 +71,7 @@ const FormEditor: React.FC = () => {
           label="Description"
           placeholder="Enter description"
           value={form.description}
-          onChange={handleDescriptionChange}
+          onValueChange={handleDescriptionChange}
         />
       </div>
       <div className="mt-4">
@@ -91,6 +96,10 @@ const FormEditor: React.FC = () => {
       ))}
       <div className="flex justify-center mt-4">
         <Button onPress={addGroup}>Add Group</Button>
+      </div>
+      {/* Add the Submit button here */}
+      <div className="flex justify-center mt-4">
+        <Button onPress={handleSubmit}>Submit</Button>
       </div>
     </div>
   );

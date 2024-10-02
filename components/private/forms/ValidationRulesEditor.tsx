@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { Input, Select, Popover, PopoverTrigger, Button, PopoverContent, SelectItem } from "@nextui-org/react";
 import { ValidationRule } from "@/types/FormTypes";
 import { ValidationRuleType, InputType } from "@/types/FormEnums";
-import { getAvailableValidationRules } from "@/lib/utils";
+import { cn, getAvailableValidationRules } from "@/lib/utils";
 import { Switch } from "@nextui-org/switch";
 
 interface ValidationRulesEditorProps {
@@ -23,8 +23,13 @@ const ValidationRulesEditor: React.FC<ValidationRulesEditorProps> = ({
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [multipleChoiceType, setMultipleChoiceType] = useState<string | null>(null); // State for dropdown selection
 
+  // Synchronize localRules with validationRules prop
   useEffect(() => {
-    // Reset local validation rules if inputType changes
+    setLocalRules(validationRules);
+  }, [validationRules]);
+
+  useEffect(() => {
+    // Reset multipleChoiceType when inputType changes
     const radioRule = localRules.find(rule => rule.type === ValidationRuleType.IS_RADIO);
     const multipleChoiceRule = localRules.find(rule => rule.type === ValidationRuleType.IS_MULTIPLE_CHOICE);
 
@@ -36,7 +41,7 @@ const ValidationRulesEditor: React.FC<ValidationRulesEditorProps> = ({
       setMultipleChoiceType(null); // Reset the dropdown selection
     }
     setIsPopoverOpen(false); // Close the popover when the input type changes
-  }, [inputType, localRules]);
+  }, [inputType]); // Removed localRules from dependencies
 
   const handleMultipleChoiceTypeChange = (type: string) => {
     let updatedRules = [...localRules];
@@ -140,8 +145,12 @@ const ValidationRulesEditor: React.FC<ValidationRulesEditorProps> = ({
                         ? 'Max Length' : type === ValidationRuleType.MIN_LENGTH
                           ? 'Min Length' : 'Regex Match'}</span>
                     <Switch
+                      classNames={{
+                        wrapper: "mr-0",
+                      }}
                       size="sm"
-                      checked={localRules.some((rule) => rule.type === type)}
+                      color="success"
+                      isSelected={localRules.some((rule) => rule.type === type)}
                       onChange={() => toggleValidationRule(type)}
                     />
                   </div>

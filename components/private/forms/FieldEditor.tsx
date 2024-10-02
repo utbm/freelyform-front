@@ -1,10 +1,10 @@
 // components/private/forms/FieldEditor.tsx
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import MultipleChoiceOptionsEditor from './MultipleChoiceOptionsEditor';
 import ValidationRulesEditor from './ValidationRulesEditor';
-import { Input, Select, Checkbox, Button, SelectItem } from "@nextui-org/react";
+import { Input, Select, Button, SelectItem } from "@nextui-org/react";
 import { FaTimes } from 'react-icons/fa';
 import { FormField } from "@/types/FormTypes";
 import { InputType } from "@/types/FormEnums";
@@ -28,7 +28,11 @@ const FieldEditor: React.FC<FieldEditorProps> = ({
 
   const handleTypeChange = (value: string | undefined) => {
     if (value) {
-      onUpdateField({ ...field, type: value as InputType });
+      onUpdateField({
+        ...field,
+        type: value as InputType,
+        validationRules: [], // Reset validation rules
+      });
     }
   };
 
@@ -71,7 +75,9 @@ const FieldEditor: React.FC<FieldEditorProps> = ({
             }
           >
             {Object.values(InputType).map((type) => (
-              <SelectItem key={type}>{getInputTypeIcon(type) + " " + getInputTypeDisplay(type)}</SelectItem>
+              <SelectItem key={type}>
+                {getInputTypeIcon(type) + " " + getInputTypeDisplay(type)}
+              </SelectItem>
             ))}
           </Select>
         </div>
@@ -108,7 +114,7 @@ const FieldEditor: React.FC<FieldEditorProps> = ({
       {field.type === InputType.MULTIPLE_CHOICE && (
         <MultipleChoiceOptionsEditor
           choices={field.options?.choices || []}
-          onUpdateChoices={(choices) => {
+          onUpdateChoices={(choices: string[]) => {
             onUpdateField({ ...field, options: { ...field.options, choices } });
           }}
         />
