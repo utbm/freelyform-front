@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { Input, Textarea, Button } from '@nextui-org/react';
 import { Form, FormGroup } from "@/types/FormTypes";
 import GroupEditor from "@/components/private/forms/GroupEditor";
+import { generateUniqueId } from "@/lib/utils";
 
 const FormEditor: React.FC = () => {
   const [form, setForm] = useState<Form>({
@@ -106,8 +107,3 @@ const FormEditor: React.FC = () => {
 };
 
 export default FormEditor;
-
-// Utility function to generate unique IDs
-const generateUniqueId = () => {
-  return Math.random().toString(36).substr(2, 9);
-};
