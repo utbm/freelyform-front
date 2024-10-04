@@ -1,28 +1,24 @@
 import * as React from "react";
+import Image from "next/image";
 
 import { IconSvgProps } from "@/types";
 
-export const Logo: React.FC<IconSvgProps> = ({
-  size = 36,
-  width,
-  height,
-  ...props
-}) => (
-  <svg
-    fill="none"
-    height={size || height}
-    viewBox="0 0 32 32"
-    width={size || width}
-    {...props}
-  >
-    <path
-      clipRule="evenodd"
-      d="M17.6482 10.1305L15.8785 7.02583L7.02979 22.5499H10.5278L17.6482 10.1305ZM19.8798 14.0457L18.11 17.1983L19.394 19.4511H16.8453L15.1056 22.5499H24.7272L19.8798 14.0457Z"
-      fill="currentColor"
-      fillRule="evenodd"
+export const Logo: React.FC<IconSvgProps> = ({ size = 36, ...props }) => {
+  const numericSize = Number(size); // Ensure it's a number
+
+  return (
+    <Image
+      alt="Logo"
+      // @ts-ignore
+      height={numericSize} // Path to your SVG in the public folder
+      // @ts-ignore
+      src="/logo.svg"
+      // @ts-ignore
+      width={numericSize}
+      {...props}
     />
-  </svg>
-);
+  );
+};
 
 export const DiscordIcon: React.FC<IconSvgProps> = ({
   size = 24,
@@ -213,3 +209,124 @@ export const NextUILogo: React.FC<IconSvgProps> = (props) => {
     </svg>
   );
 };
+
+export const QuestionMarkIcon: React.FC<IconSvgProps> = (props) => {
+  const { width, height = 40 } = props;
+
+  return (
+    <svg
+      fill="none"
+      height={height}
+      width={width}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+      viewBox="0 0 29.536 29.536"
+    >
+      <g>
+        <path
+          className="fill-black dark:fill-white"
+          d="M14.768,0C6.611,0,0,6.609,0,14.768c0,8.155,6.611,14.767,14.768,14.767s14.768-6.612,14.768-14.767
+		C29.535,6.609,22.924,0,14.768,0z M14.768,27.126c-6.828,0-12.361-5.532-12.361-12.359c0-6.828,5.533-12.362,12.361-12.362
+		c6.826,0,12.359,5.535,12.359,12.362C27.127,21.594,21.594,27.126,14.768,27.126z"
+        />
+        <path
+          className="fill-black dark:fill-white"
+          d="M14.385,19.337c-1.338,0-2.289,0.951-2.289,2.34c0,1.336,0.926,2.339,2.289,2.339c1.414,0,2.314-1.003,2.314-2.339
+		C16.672,20.288,15.771,19.337,14.385,19.337z"
+        />
+        <path
+          className="fill-black dark:fill-white"
+          d="M14.742,6.092c-1.824,0-3.34,0.513-4.293,1.053l0.875,2.804c0.668-0.462,1.697-0.772,2.545-0.772
+		c1.285,0.027,1.879,0.644,1.879,1.543c0,0.85-0.67,1.697-1.494,2.701c-1.156,1.364-1.594,2.701-1.516,4.012l0.025,0.669h3.42
+		v-0.463c-0.025-1.158,0.387-2.162,1.311-3.215c0.979-1.08,2.211-2.366,2.211-4.321C19.705,7.968,18.139,6.092,14.742,6.092z"
+        />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
+      </g>
+    </svg>
+  );
+};
+
+// @ts-ignore
+export const PlusIcon = ({ size = 24, width, height, ...props }) => (
+  <svg
+    aria-hidden="true"
+    fill="none"
+    focusable="false"
+    height={size || height}
+    role="presentation"
+    viewBox="0 0 24 24"
+    width={size || width}
+    {...props}
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+    >
+      <path d="M6 12h12" />
+      <path d="M12 18V6" />
+    </g>
+  </svg>
+);
+
+export const ChevronDownIcon = ({ strokeWidth = 1.5, ...otherProps }) => (
+  <svg
+    aria-hidden="true"
+    fill="none"
+    focusable="false"
+    height="1em"
+    role="presentation"
+    viewBox="0 0 24 24"
+    width="1em"
+    {...otherProps}
+  >
+    <path
+      d="m19.92 8.95-6.52 6.52c-.77.77-2.03.77-2.8 0L4.08 8.95"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeMiterlimit={10}
+      strokeWidth={strokeWidth}
+    />
+  </svg>
+);
+
+// @ts-ignore
+export const VerticalDotsIcon = ({
+  size = 24,
+  width = undefined,
+  height = undefined,
+  ...props
+}) => (
+  <svg
+    aria-hidden="true"
+    fill="none"
+    focusable="false"
+    height={size || height}
+    role="presentation"
+    viewBox="0 0 24 24"
+    width={size || width}
+    {...props}
+  >
+    <path
+      d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+      fill="currentColor"
+    />
+  </svg>
+);
