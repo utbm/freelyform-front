@@ -22,10 +22,7 @@ export const Navbar = () => {
     <NextUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
-          <NextLink
-            className="flex justify-start items-center gap-1"
-            href="/"
-          >
+          <NextLink className="flex justify-start items-center gap-1" href="/">
             <Logo size={25} />
             <p className="font-bold text-inherit">{siteConfig.name}</p>
           </NextLink>

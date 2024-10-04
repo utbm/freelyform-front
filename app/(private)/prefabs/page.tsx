@@ -1,7 +1,7 @@
-
 "use client";
 
-import React from 'react';
+import React from "react";
+
 import PrefabsTable from "@/components/private/lists/PrefabsTable";
 
 export default function ListPrefabs() {

@@ -333,6 +333,9 @@ importers:
       '@faker-js/faker':
         specifier: ^9.0.3
         version: 9.0.3
+      '@next/eslint-plugin-next':
+        specifier: ^14.2.14
+        version: 14.2.14
       '@testing-library/dom':
         specifier: ^10.4.0
         version: 10.4.0
@@ -1342,6 +1345,9 @@ packages:
 
   '@next/eslint-plugin-next@14.2.1':
     resolution: {integrity: sha512-Fp+mthEBjkn8r9qd6o4JgxKp0IDEzW0VYHD8ZC05xS5/lFNwHKuOdr2kVhWG7BQCO9L6eeepshM1Wbs2T+LgSg==}
+
+  '@next/eslint-plugin-next@14.2.14':
+    resolution: {integrity: sha512-kV+OsZ56xhj0rnTn6HegyTGkoa16Mxjrpk7pjWumyB2P8JVQb8S9qtkjy/ye0GnTr4JWtWG4x/2qN40lKZ3iVQ==}
 
   '@next/swc-darwin-arm64@14.2.4':
     resolution: {integrity: sha512-AH3mO4JlFUqsYcwFUHb1wAKlebHU/Hv2u2kb1pAuRanDZ7pD/A/KPD98RHZmwsJpdHQwfEc/06mgpSzwrJYnNg==}
@@ -8508,6 +8514,10 @@ snapshots:
   '@next/env@14.2.4': {}
 
   '@next/eslint-plugin-next@14.2.1':
+    dependencies:
+      glob: 10.3.10
+
+  '@next/eslint-plugin-next@14.2.14':
     dependencies:
       glob: 10.3.10
 

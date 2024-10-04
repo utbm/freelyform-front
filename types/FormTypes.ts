@@ -1,6 +1,6 @@
 // types/FormTypes.ts
 
-import { InputType, ValidationRuleType } from './FormEnums';
+import { InputType, ValidationRuleType } from "./FormEnums";
 
 export interface Form {
   name: string;

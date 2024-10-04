@@ -21,11 +21,11 @@ export const Logo: React.FC<IconSvgProps> = ({ size = 36, ...props }) => {
 };
 
 export const DiscordIcon: React.FC<IconSvgProps> = ({
-                                                      size = 24,
-                                                      width,
-                                                      height,
-                                                      ...props
-                                                    }) => {
+  size = 24,
+  width,
+  height,
+  ...props
+}) => {
   return (
     <svg
       height={size || height}
@@ -42,11 +42,11 @@ export const DiscordIcon: React.FC<IconSvgProps> = ({
 };
 
 export const TwitterIcon: React.FC<IconSvgProps> = ({
-                                                      size = 24,
-                                                      width,
-                                                      height,
-                                                      ...props
-                                                    }) => {
+  size = 24,
+  width,
+  height,
+  ...props
+}) => {
   return (
     <svg
       height={size || height}
@@ -63,11 +63,11 @@ export const TwitterIcon: React.FC<IconSvgProps> = ({
 };
 
 export const GithubIcon: React.FC<IconSvgProps> = ({
-                                                     size = 24,
-                                                     width,
-                                                     height,
-                                                     ...props
-                                                   }) => {
+  size = 24,
+  width,
+  height,
+  ...props
+}) => {
   return (
     <svg
       height={size || height}
@@ -86,11 +86,11 @@ export const GithubIcon: React.FC<IconSvgProps> = ({
 };
 
 export const MoonFilledIcon = ({
-                                 size = 24,
-                                 width,
-                                 height,
-                                 ...props
-                               }: IconSvgProps) => (
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
   <svg
     aria-hidden="true"
     focusable="false"
@@ -108,11 +108,11 @@ export const MoonFilledIcon = ({
 );
 
 export const SunFilledIcon = ({
-                                size = 24,
-                                width,
-                                height,
-                                ...props
-                              }: IconSvgProps) => (
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
   <svg
     aria-hidden="true"
     focusable="false"
@@ -124,18 +124,17 @@ export const SunFilledIcon = ({
   >
     <g fill="currentColor">
       <path d="M19 12a7 7 0 11-7-7 7 7 0 017 7z" />
-      <path
-        d="M12 22.96a.969.969 0 01-1-.96v-.08a1 1 0 012 0 1.038 1.038 0 01-1 1.04zm7.14-2.82a1.024 1.024 0 01-.71-.29l-.13-.13a1 1 0 011.41-1.41l.13.13a1 1 0 010 1.41.984.984 0 01-.7.29zm-14.28 0a1.024 1.024 0 01-.71-.29 1 1 0 010-1.41l.13-.13a1 1 0 011.41 1.41l-.13.13a1 1 0 01-.7.29zM22 13h-.08a1 1 0 010-2 1.038 1.038 0 011.04 1 .969.969 0 01-.96 1zM2.08 13H2a1 1 0 010-2 1.038 1.038 0 011.04 1 .969.969 0 01-.96 1zm16.93-7.01a1.024 1.024 0 01-.71-.29 1 1 0 010-1.41l.13-.13a1 1 0 011.41 1.41l-.13.13a.984.984 0 01-.7.29zm-14.02 0a1.024 1.024 0 01-.71-.29l-.13-.14a1 1 0 011.41-1.41l.13.13a1 1 0 010 1.41.97.97 0 01-.7.3zM12 3.04a.969.969 0 01-1-.96V2a1 1 0 012 0 1.038 1.038 0 01-1 1.04z" />
+      <path d="M12 22.96a.969.969 0 01-1-.96v-.08a1 1 0 012 0 1.038 1.038 0 01-1 1.04zm7.14-2.82a1.024 1.024 0 01-.71-.29l-.13-.13a1 1 0 011.41-1.41l.13.13a1 1 0 010 1.41.984.984 0 01-.7.29zm-14.28 0a1.024 1.024 0 01-.71-.29 1 1 0 010-1.41l.13-.13a1 1 0 011.41 1.41l-.13.13a1 1 0 01-.7.29zM22 13h-.08a1 1 0 010-2 1.038 1.038 0 011.04 1 .969.969 0 01-.96 1zM2.08 13H2a1 1 0 010-2 1.038 1.038 0 011.04 1 .969.969 0 01-.96 1zm16.93-7.01a1.024 1.024 0 01-.71-.29 1 1 0 010-1.41l.13-.13a1 1 0 011.41 1.41l-.13.13a.984.984 0 01-.7.29zm-14.02 0a1.024 1.024 0 01-.71-.29l-.13-.14a1 1 0 011.41-1.41l.13.13a1 1 0 010 1.41.97.97 0 01-.7.3zM12 3.04a.969.969 0 01-1-.96V2a1 1 0 012 0 1.038 1.038 0 01-1 1.04z" />
     </g>
   </svg>
 );
 
 export const HeartFilledIcon = ({
-                                  size = 24,
-                                  width,
-                                  height,
-                                  ...props
-                                }: IconSvgProps) => (
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
   <svg
     aria-hidden="true"
     focusable="false"
@@ -215,58 +214,54 @@ export const QuestionMarkIcon: React.FC<IconSvgProps> = (props) => {
   const { width, height = 40 } = props;
 
   return (
-    <svg fill="none"
-         height={height}
-         width={width}
-         xmlns="http://www.w3.org/2000/svg"
-         {...props}
-         viewBox="0 0 29.536 29.536">
+    <svg
+      fill="none"
+      height={height}
+      width={width}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+      viewBox="0 0 29.536 29.536"
+    >
       <g>
-        <path className="fill-black dark:fill-white" d="M14.768,0C6.611,0,0,6.609,0,14.768c0,8.155,6.611,14.767,14.768,14.767s14.768-6.612,14.768-14.767
+        <path
+          className="fill-black dark:fill-white"
+          d="M14.768,0C6.611,0,0,6.609,0,14.768c0,8.155,6.611,14.767,14.768,14.767s14.768-6.612,14.768-14.767
 		C29.535,6.609,22.924,0,14.768,0z M14.768,27.126c-6.828,0-12.361-5.532-12.361-12.359c0-6.828,5.533-12.362,12.361-12.362
-		c6.826,0,12.359,5.535,12.359,12.362C27.127,21.594,21.594,27.126,14.768,27.126z" />
-        <path className="fill-black dark:fill-white" d="M14.385,19.337c-1.338,0-2.289,0.951-2.289,2.34c0,1.336,0.926,2.339,2.289,2.339c1.414,0,2.314-1.003,2.314-2.339
-		C16.672,20.288,15.771,19.337,14.385,19.337z" />
-        <path className="fill-black dark:fill-white" d="M14.742,6.092c-1.824,0-3.34,0.513-4.293,1.053l0.875,2.804c0.668-0.462,1.697-0.772,2.545-0.772
+		c6.826,0,12.359,5.535,12.359,12.362C27.127,21.594,21.594,27.126,14.768,27.126z"
+        />
+        <path
+          className="fill-black dark:fill-white"
+          d="M14.385,19.337c-1.338,0-2.289,0.951-2.289,2.34c0,1.336,0.926,2.339,2.289,2.339c1.414,0,2.314-1.003,2.314-2.339
+		C16.672,20.288,15.771,19.337,14.385,19.337z"
+        />
+        <path
+          className="fill-black dark:fill-white"
+          d="M14.742,6.092c-1.824,0-3.34,0.513-4.293,1.053l0.875,2.804c0.668-0.462,1.697-0.772,2.545-0.772
 		c1.285,0.027,1.879,0.644,1.879,1.543c0,0.85-0.67,1.697-1.494,2.701c-1.156,1.364-1.594,2.701-1.516,4.012l0.025,0.669h3.42
-		v-0.463c-0.025-1.158,0.387-2.162,1.311-3.215c0.979-1.08,2.211-2.366,2.211-4.321C19.705,7.968,18.139,6.092,14.742,6.092z" />
-        <g>
-        </g>
-        <g>
-        </g>
-        <g>
-        </g>
-        <g>
-        </g>
-        <g>
-        </g>
-        <g>
-        </g>
-        <g>
-        </g>
-        <g>
-        </g>
-        <g>
-        </g>
-        <g>
-        </g>
-        <g>
-        </g>
-        <g>
-        </g>
-        <g>
-        </g>
-        <g>
-        </g>
-        <g>
-        </g>
+		v-0.463c-0.025-1.158,0.387-2.162,1.311-3.215c0.979-1.08,2.211-2.366,2.211-4.321C19.705,7.968,18.139,6.092,14.742,6.092z"
+        />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
+        <g />
       </g>
     </svg>
   );
 };
 
 // @ts-ignore
-export const PlusIcon = ({size = 24, width, height, ...props}) => (
+export const PlusIcon = ({ size = 24, width, height, ...props }) => (
   <svg
     aria-hidden="true"
     fill="none"
@@ -290,7 +285,7 @@ export const PlusIcon = ({size = 24, width, height, ...props}) => (
   </svg>
 );
 
-export const ChevronDownIcon = ({strokeWidth = 1.5, ...otherProps}) => (
+export const ChevronDownIcon = ({ strokeWidth = 1.5, ...otherProps }) => (
   <svg
     aria-hidden="true"
     fill="none"
@@ -313,7 +308,12 @@ export const ChevronDownIcon = ({strokeWidth = 1.5, ...otherProps}) => (
 );
 
 // @ts-ignore
-export const VerticalDotsIcon = ({size = 24, width, height, ...props}) => (
+export const VerticalDotsIcon = ({
+  size = 24,
+  width = undefined,
+  height = undefined,
+  ...props
+}) => (
   <svg
     aria-hidden="true"
     fill="none"

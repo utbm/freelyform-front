@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+
 import { InputType, ValidationRuleType } from "@/types/FormEnums";
 
 export function cn(...inputs: ClassValue[]) {
@@ -61,24 +62,26 @@ export function getInputValidationRuleDisplay(type: ValidationRuleType) {
 
 // utils.ts or similar utility file
 
-export function getAvailableValidationRules(inputType: InputType): ValidationRuleType[] {
+export function getAvailableValidationRules(
+  inputType: InputType,
+): ValidationRuleType[] {
   switch (inputType) {
     case InputType.TEXT:
       return [
         ValidationRuleType.IS_EMAIL,
         ValidationRuleType.REGEX_MATCH,
         ValidationRuleType.MAX_LENGTH,
-        ValidationRuleType.MIN_LENGTH
+        ValidationRuleType.MIN_LENGTH,
       ];
     case InputType.NUMBER:
-      return [
-        ValidationRuleType.MAX_LENGTH,
-        ValidationRuleType.MIN_LENGTH
-      ];
+      return [ValidationRuleType.MAX_LENGTH, ValidationRuleType.MIN_LENGTH];
     case InputType.DATE:
       return []; // No specific validation rules for date input
     case InputType.MULTIPLE_CHOICE:
-      return [ValidationRuleType.IS_RADIO, ValidationRuleType.IS_MULTIPLE_CHOICE];
+      return [
+        ValidationRuleType.IS_RADIO,
+        ValidationRuleType.IS_MULTIPLE_CHOICE,
+      ];
     case InputType.GEOLOCATION:
       return []; // No specific validation rules for geolocation
     default:
@@ -86,12 +89,10 @@ export function getAvailableValidationRules(inputType: InputType): ValidationRul
   }
 }
 
-
-export function capitalize(str : string) {
+export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 export function generateUniqueId() {
   return Math.random().toString(36).substr(2, 9);
 }
-

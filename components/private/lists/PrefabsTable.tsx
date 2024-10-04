@@ -14,13 +14,21 @@ import {
   DropdownItem,
   Pagination,
   Chip,
+  SortDescriptor,
+  Selection,
 } from "@nextui-org/react";
-import { ChevronDownIcon, PlusIcon, SearchIcon, VerticalDotsIcon } from "@/components/icons";
-import { capitalize, generateUniqueId } from "@/lib/utils";
-import { prefabs } from "@/data/prefabs";
 import { FaPencil } from "react-icons/fa6";
+
 import { FaFileExcel, FaPlus, FaShare, FaTrash } from "react-icons/fa";
 import { Link } from "@nextui-org/link";
+
+import {
+  ChevronDownIcon,
+  SearchIcon,
+  VerticalDotsIcon,
+} from "@/components/icons";
+import { capitalize, generateUniqueId } from "@/lib/utils";
+import { prefabs } from "@/data/prefabs";
 
 const headerColumns = [
   { uid: "title", name: "Title" },
@@ -32,9 +40,9 @@ const headerColumns = [
 
 export default function PrefabsTable() {
   const [filterValue, setFilterValue] = React.useState("");
-  const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
+  const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set());
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [sortDescriptor, setSortDescriptor] = React.useState({
+  const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "title",
     direction: "ascending",
   });
@@ -43,11 +51,12 @@ export default function PrefabsTable() {
   // Get all unique tags from the prefabs data and sort them
   const uniqueTags = React.useMemo(() => {
     const tags = prefabs.flatMap((form) => form.tags || []);
+
     return Array.from(new Set(tags)).sort(); // Get unique sorted tags
   }, []);
 
   // Initialize selectedTags as an empty set
-  const [selectedTags, setSelectedTags] = React.useState(new Set());
+  const [selectedTags, setSelectedTags] = React.useState<Set<string>>(new Set());
 
   const hasSearchFilter = Boolean(filterValue);
   const hasTagFilter = selectedTags.size > 0;
@@ -57,13 +66,13 @@ export default function PrefabsTable() {
 
     if (hasSearchFilter) {
       filteredForms = filteredForms.filter((form) =>
-        form.name.toLowerCase().includes(filterValue.toLowerCase())
+        form.name.toLowerCase().includes(filterValue.toLowerCase()),
       );
     }
 
     if (hasTagFilter) {
       filteredForms = filteredForms.filter((form) =>
-        form.tags?.some((tag) => selectedTags.has(tag))
+        form.tags?.some((tag) => selectedTags.has(tag)),
       );
     }
 
@@ -81,7 +90,9 @@ export default function PrefabsTable() {
 
   const sortedItems = React.useMemo(() => {
     return [...items].sort((a, b) => {
+      // @ts-ignore
       const first = a[sortDescriptor.column];
+      // @ts-ignore
       const second = b[sortDescriptor.column];
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
@@ -89,7 +100,7 @@ export default function PrefabsTable() {
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((form, columnKey) => {
+  const renderCell = React.useCallback((form: any, columnKey: any) => {
     const cellValue = form[columnKey];
 
     switch (columnKey) {
@@ -97,14 +108,16 @@ export default function PrefabsTable() {
         return <span>{form.name}</span>;
       case "description":
         return <span>{form.description}</span>;
-      case "tags":
+      case "tags": {
         // Generate <Chip size="sm" color="primary">Primary</Chip> for each tag
-        const tags = form.tags?.map((tag) => (
-          <Chip key={generateUniqueId()} size="sm" color="default">
+        const tags = form.tags?.map((tag: any) => (
+          <Chip key={generateUniqueId()} color="default" size="sm">
             {tag}
           </Chip>
         ));
+
         return <span className="flex flex-row gap-2">{tags}</span>;
+      }
       case "groups":
         return <span>{form.groups.length}</span>;
       case "actions":
@@ -162,12 +175,12 @@ export default function PrefabsTable() {
     }
   }, [page]);
 
-  const onRowsPerPageChange = React.useCallback((e) => {
+  const onRowsPerPageChange = React.useCallback((e: any) => {
     setRowsPerPage(Number(e.target.value));
     setPage(1);
   }, []);
 
-  const onSearchChange = React.useCallback((value) => {
+  const onSearchChange = React.useCallback((value: any) => {
     setFilterValue(value);
     setPage(1);
   }, []);
@@ -177,7 +190,7 @@ export default function PrefabsTable() {
     setPage(1);
   }, []);
 
-  const onTagSelectionChange = React.useCallback((keys) => {
+  const onTagSelectionChange = React.useCallback((keys: any) => {
     setSelectedTags(new Set(keys));
     setPage(1);
   }, []);
@@ -198,7 +211,10 @@ export default function PrefabsTable() {
           <div className="flex gap-3">
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
-                <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
+                <Button
+                  endContent={<ChevronDownIcon className="text-small" />}
+                  variant="flat"
+                >
                   Filter by Tags
                 </Button>
               </DropdownTrigger>
@@ -216,7 +232,12 @@ export default function PrefabsTable() {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button href="/prefabs/create" as={Link} color="primary" endContent={<FaPlus />}>
+            <Button
+              as={Link}
+              color="primary"
+              endContent={<FaPlus />}
+              href="/prefabs/create"
+            >
               Add New
             </Button>
           </div>
@@ -266,12 +287,19 @@ export default function PrefabsTable() {
         />
       </div>
     );
-  }, [selectedKeys, filteredItems.length, page, pages, onNextPage, onPreviousPage]);
+  }, [
+    selectedKeys,
+    filteredItems.length,
+    page,
+    pages,
+    onNextPage,
+    onPreviousPage,
+  ]);
 
   return (
     <Table
-      aria-label="Example table with custom cells, pagination and sorting"
       isHeaderSticky
+      aria-label="Example table with custom cells, pagination and sorting"
       bottomContent={bottomContent}
       bottomContentPlacement="outside"
       classNames={{
@@ -279,17 +307,17 @@ export default function PrefabsTable() {
       }}
       selectedKeys={selectedKeys}
       sortDescriptor={sortDescriptor}
+      onSortChange={setSortDescriptor}
       topContent={topContent}
       topContentPlacement="outside"
       onSelectionChange={setSelectedKeys}
-      onSortChange={setSortDescriptor}
     >
       <TableHeader columns={headerColumns}>
         {(column) => (
           <TableColumn
             key={column.uid}
             align={column.uid === "actions" ? "center" : "start"}
-            allowsSorting={column.sortable}
+            allowsSorting={true}
           >
             {column.name}
           </TableColumn>
@@ -298,7 +326,9 @@ export default function PrefabsTable() {
       <TableBody emptyContent={"No forms found"} items={sortedItems}>
         {(item) => (
           <TableRow key={item.name}>
-            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+            {(columnKey) => (
+              <TableCell>{renderCell(item, columnKey)}</TableCell>
+            )}
           </TableRow>
         )}
       </TableBody>

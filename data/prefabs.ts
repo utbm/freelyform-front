@@ -17,7 +17,7 @@ export const prefabs: Form[] = [
             type: InputType.TEXT,
             validationRules: [
               { type: ValidationRuleType.MIN_LENGTH, value: 3 },
-              { type: ValidationRuleType.MAX_LENGTH, value: 50 }
+              { type: ValidationRuleType.MAX_LENGTH, value: 50 },
             ],
             optional: false,
           },
@@ -33,10 +33,10 @@ export const prefabs: Form[] = [
             label: "Phone Number",
             type: InputType.TEXT,
             validationRules: [
-              { type: ValidationRuleType.REGEX_MATCH, value: "^[0-9]{10}$" }
+              { type: ValidationRuleType.REGEX_MATCH, value: "^[0-9]{10}$" },
             ],
             optional: true,
-          }
+          },
         ],
       },
       {
@@ -80,7 +80,9 @@ export const prefabs: Form[] = [
             id: "field-7",
             label: "Comments",
             type: InputType.TEXT,
-            validationRules: [{ type: ValidationRuleType.MAX_LENGTH, value: 200 }],
+            validationRules: [
+              { type: ValidationRuleType.MAX_LENGTH, value: 200 },
+            ],
             optional: true,
           },
         ],
@@ -100,7 +102,15 @@ export const prefabs: Form[] = [
             id: "field-8",
             label: "How satisfied are you with our service?",
             type: InputType.MULTIPLE_CHOICE,
-            options: { choices: ["Very Satisfied", "Satisfied", "Neutral", "Dissatisfied", "Very Dissatisfied"] },
+            options: {
+              choices: [
+                "Very Satisfied",
+                "Satisfied",
+                "Neutral",
+                "Dissatisfied",
+                "Very Dissatisfied",
+              ],
+            },
             optional: false,
           },
           {
@@ -127,7 +137,9 @@ export const prefabs: Form[] = [
             id: "field-10",
             label: "Attendee Name",
             type: InputType.TEXT,
-            validationRules: [{ type: ValidationRuleType.MIN_LENGTH, value: 3 }],
+            validationRules: [
+              { type: ValidationRuleType.MIN_LENGTH, value: 3 },
+            ],
             optional: false,
           },
           {
@@ -161,7 +173,9 @@ export const prefabs: Form[] = [
             id: "field-13",
             label: "Full Name",
             type: InputType.TEXT,
-            validationRules: [{ type: ValidationRuleType.MIN_LENGTH, value: 3 }],
+            validationRules: [
+              { type: ValidationRuleType.MIN_LENGTH, value: 3 },
+            ],
             optional: false,
           },
           {
@@ -175,7 +189,9 @@ export const prefabs: Form[] = [
             id: "field-15",
             label: "Phone Number",
             type: InputType.TEXT,
-            validationRules: [{ type: ValidationRuleType.REGEX_MATCH, value: "^[0-9]{10}$" }],
+            validationRules: [
+              { type: ValidationRuleType.REGEX_MATCH, value: "^[0-9]{10}$" },
+            ],
             optional: false,
           },
         ],
@@ -213,7 +229,9 @@ export const prefabs: Form[] = [
             id: "field-18",
             label: "Full Name",
             type: InputType.TEXT,
-            validationRules: [{ type: ValidationRuleType.MIN_LENGTH, value: 3 }],
+            validationRules: [
+              { type: ValidationRuleType.MIN_LENGTH, value: 3 },
+            ],
             optional: false,
           },
           {
@@ -226,7 +244,9 @@ export const prefabs: Form[] = [
             id: "field-20",
             label: "Contact Number",
             type: InputType.TEXT,
-            validationRules: [{ type: ValidationRuleType.REGEX_MATCH, value: "^[0-9]{10}$" }],
+            validationRules: [
+              { type: ValidationRuleType.REGEX_MATCH, value: "^[0-9]{10}$" },
+            ],
             optional: false,
           },
         ],
@@ -246,7 +266,9 @@ export const prefabs: Form[] = [
             id: "field-22",
             label: "Please specify your allergies (if any)",
             type: InputType.TEXT,
-            validationRules: [{ type: ValidationRuleType.MAX_LENGTH, value: 200 }],
+            validationRules: [
+              { type: ValidationRuleType.MAX_LENGTH, value: 200 },
+            ],
             optional: true,
           },
         ],
@@ -273,18 +295,22 @@ export const prefabs: Form[] = [
             id: "field-24",
             label: "What did you like about the product?",
             type: InputType.TEXT,
-            validationRules: [{ type: ValidationRuleType.MAX_LENGTH, value: 300 }],
+            validationRules: [
+              { type: ValidationRuleType.MAX_LENGTH, value: 300 },
+            ],
             optional: true,
           },
           {
             id: "field-25",
             label: "What improvements would you suggest?",
             type: InputType.TEXT,
-            validationRules: [{ type: ValidationRuleType.MAX_LENGTH, value: 300 }],
+            validationRules: [
+              { type: ValidationRuleType.MAX_LENGTH, value: 300 },
+            ],
             optional: true,
           },
         ],
       },
     ],
-  }
+  },
 ];

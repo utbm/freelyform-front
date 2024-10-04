@@ -7,7 +7,9 @@ interface MultipleChoiceOptionsEditorProps {
   onUpdateChoices: (choices: string[]) => void;
 }
 
-const MultipleChoiceOptionsEditor: React.FC<MultipleChoiceOptionsEditorProps> = ({ choices, onUpdateChoices }) => {
+const MultipleChoiceOptionsEditor: React.FC<
+  MultipleChoiceOptionsEditorProps
+> = ({ choices, onUpdateChoices }) => {
   const [newChoice, setNewChoice] = useState("");
 
   const addChoice = () => {
@@ -24,6 +26,7 @@ const MultipleChoiceOptionsEditor: React.FC<MultipleChoiceOptionsEditorProps> = 
 
   const removeChoice = (index: number) => {
     const updatedChoices = choices.filter((_, i) => i !== index);
+
     onUpdateChoices(updatedChoices);
   };
 
@@ -32,7 +35,10 @@ const MultipleChoiceOptionsEditor: React.FC<MultipleChoiceOptionsEditorProps> = 
       <AccordionItem key="1" aria-label="Choices" title="Choices">
         <div>
           {choices.map((choice, index) => (
-            <div key={index} className="flex items-center justify-between mt-2 border p-2 rounded-lg">
+            <div
+              key={index}
+              className="flex items-center justify-between mt-2 border p-2 rounded-lg"
+            >
               <div className="flex items-center">
                 <div className="flex items-center justify-center w-8 h-8 bg-gray-300 rounded text-black font-bold mr-4">
                   {String.fromCharCode(65 + index)}
@@ -40,10 +46,10 @@ const MultipleChoiceOptionsEditor: React.FC<MultipleChoiceOptionsEditorProps> = 
                 <span>{choice}</span>
               </div>
               <Button
-                size="sm"
                 color="danger"
-                onPress={() => removeChoice(index)}
+                size="sm"
                 startContent={<FaTimes />}
+                onPress={() => removeChoice(index)}
               />
             </div>
           ))}
@@ -51,9 +57,9 @@ const MultipleChoiceOptionsEditor: React.FC<MultipleChoiceOptionsEditorProps> = 
           <div className="mt-4">
             <Input
               fullWidth
-              size="sm"
               label="New Choice"
               placeholder="Enter new choice"
+              size="sm"
               value={newChoice}
               onChange={(e) => setNewChoice(e.target.value)}
             />
