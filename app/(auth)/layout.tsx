@@ -9,6 +9,7 @@ import { fontSans } from "@/config/fonts";
 import { Providers } from "../providers";
 import { Logo } from "@/components/icons";
 import { ThemeSwitch } from "@/components/theme-switch";
+import { Link } from "@nextui-org/link";
 
 export const metadata: Metadata = {
   title: {
@@ -46,12 +47,12 @@ export default function RootLayout({
           <div className="h-screen w-full relative">
             <ThemeSwitch className="absolute bottom-4 left-4"/>
             <div className="flex flex-col justify-center items-center h-screen gap-6">
-              <div className="flex flex-row gap-2 flex-wrap items-center justify-center">
-                <Logo size={50} />
-                <p className="font-bold text-inherit text-5xl">{siteConfig.name}</p>
-              </div>
+                <Link href="/" className="flex flex-row gap-2 flex-wrap items-center justify-center">
+                  <Logo size={50} />
+                  <p className="font-bold text-inherit text-5xl">{siteConfig.name}</p>
+                </Link>
               <div>
-                {children}
+              {children}
               </div>
             </div>
           </div>
