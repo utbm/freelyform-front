@@ -18,7 +18,6 @@ import {
   Selection,
 } from "@nextui-org/react";
 import { FaPencil } from "react-icons/fa6";
-
 import { FaFileExcel, FaPlus, FaShare, FaTrash } from "react-icons/fa";
 import { Link } from "@nextui-org/link";
 
@@ -56,7 +55,9 @@ export default function PrefabsTable() {
   }, []);
 
   // Initialize selectedTags as an empty set
-  const [selectedTags, setSelectedTags] = React.useState<Set<string>>(new Set());
+  const [selectedTags, setSelectedTags] = React.useState<Set<string>>(
+    new Set(),
+  );
 
   const hasSearchFilter = Boolean(filterValue);
   const hasTagFilter = selectedTags.size > 0;
@@ -307,10 +308,10 @@ export default function PrefabsTable() {
       }}
       selectedKeys={selectedKeys}
       sortDescriptor={sortDescriptor}
-      onSortChange={setSortDescriptor}
       topContent={topContent}
       topContentPlacement="outside"
       onSelectionChange={setSelectedKeys}
+      onSortChange={setSortDescriptor}
     >
       <TableHeader columns={headerColumns}>
         {(column) => (

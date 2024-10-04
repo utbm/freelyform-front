@@ -15,8 +15,8 @@ interface LoginInfo {
 export default function LoginPage() {
   const [isVisible, setIsVisible] = React.useState(false);
   const [loginInfo, setLoginInfo] = React.useState<LoginInfo>({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -31,8 +31,9 @@ export default function LoginPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission logic here
-    console.log('Login Info:', loginInfo);
+    // console.log("Login Info:", loginInfo);
     // Redirect or update state as needed
+    // TODO: Implement the login with the server
   };
 
   const isValidEmail = (email: string) => {
@@ -47,29 +48,25 @@ export default function LoginPage() {
       </CardHeader>
       <Divider />
       <CardBody className="w-full flex flex-col gap-3">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
           <Input
-            type="email"
-            label="Email"
             isRequired
-            size="sm"
-            placeholder="Enter your email"
+            label="Email"
             name="email"
+            placeholder="Enter your email"
+            size="sm"
+            type="email"
             value={loginInfo.email}
             onChange={handleChange}
           />
           <Input
-            label="Password"
             isRequired
-            size="sm"
-            placeholder="Enter your password"
-            name="password"
             endContent={
               <button
+                aria-label="toggle password visibility"
                 className="focus:outline-none"
                 type="button"
                 onClick={toggleVisibility}
-                aria-label="toggle password visibility"
               >
                 {isVisible ? (
                   <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
@@ -78,22 +75,28 @@ export default function LoginPage() {
                 )}
               </button>
             }
+            label="Password"
+            name="password"
+            placeholder="Enter your password"
+            size="sm"
             type={isVisible ? "text" : "password"}
             value={loginInfo.password}
             onChange={handleChange}
           />
           <Button
-            type="submit"
-            size="sm"
-            color="primary"
             className="w-full"
+            color="primary"
             isDisabled={!isValidEmail(loginInfo.email)}
+            size="sm"
+            type="submit"
           >
             Connect
           </Button>
         </form>
         <div className="w-full flex flex-row justify-end">
-          <Link href="/register" className="!text-sm text-indigo-500">Don't have an account?</Link>
+          <Link className="!text-sm text-indigo-500" href="/register">
+            Don't have an account?
+          </Link>
         </div>
       </CardBody>
     </Card>

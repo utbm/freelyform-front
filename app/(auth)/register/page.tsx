@@ -19,11 +19,11 @@ export default function RegisterPage() {
   const [isVisible, setIsVisible] = React.useState(false);
   const [isConfirmVisible, setIsConfirmVisible] = React.useState(false);
   const [registerInfo, setRegisterInfo] = React.useState<RegisterInfo>({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -39,8 +39,9 @@ export default function RegisterPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission logic here
-    console.log('Register Info:', registerInfo);
+    // console.log("Register Info:", registerInfo);
     // Redirect or update state as needed
+    // TODO: Implement the register with the server
   };
 
   const isValidEmail = (email: string) => {
@@ -48,12 +49,13 @@ export default function RegisterPage() {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
-  const isPasswordMatch = registerInfo.password === registerInfo.confirmPassword;
+  const isPasswordMatch =
+    registerInfo.password === registerInfo.confirmPassword;
   const isFormValid =
-    registerInfo.firstName.trim() !== '' &&
-    registerInfo.lastName.trim() !== '' &&
+    registerInfo.firstName.trim() !== "" &&
+    registerInfo.lastName.trim() !== "" &&
     isValidEmail(registerInfo.email) &&
-    registerInfo.password !== '' &&
+    registerInfo.password !== "" &&
     isPasswordMatch;
 
   return (
@@ -63,47 +65,43 @@ export default function RegisterPage() {
       </CardHeader>
       <Divider />
       <CardBody className="w-full flex flex-col gap-3">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
           <Input
-            label="First Name"
             isRequired
-            size="sm"
-            placeholder="Enter your first name"
+            label="First Name"
             name="firstName"
+            placeholder="Enter your first name"
+            size="sm"
             value={registerInfo.firstName}
             onChange={handleChange}
           />
           <Input
-            label="Last Name"
             isRequired
-            size="sm"
-            placeholder="Enter your last name"
+            label="Last Name"
             name="lastName"
+            placeholder="Enter your last name"
+            size="sm"
             value={registerInfo.lastName}
             onChange={handleChange}
           />
           <Input
-            type="email"
-            label="Email"
             isRequired
-            size="sm"
-            placeholder="Enter your email"
+            label="Email"
             name="email"
+            placeholder="Enter your email"
+            size="sm"
+            type="email"
             value={registerInfo.email}
             onChange={handleChange}
           />
           <Input
-            label="Password"
             isRequired
-            size="sm"
-            placeholder="Enter your password"
-            name="password"
             endContent={
               <button
+                aria-label="toggle password visibility"
                 className="focus:outline-none"
                 type="button"
                 onClick={toggleVisibility}
-                aria-label="toggle password visibility"
               >
                 {isVisible ? (
                   <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
@@ -112,22 +110,22 @@ export default function RegisterPage() {
                 )}
               </button>
             }
+            label="Password"
+            name="password"
+            placeholder="Enter your password"
+            size="sm"
             type={isVisible ? "text" : "password"}
             value={registerInfo.password}
             onChange={handleChange}
           />
           <Input
-            label="Confirm Password"
             isRequired
-            size="sm"
-            placeholder="Confirm your password"
-            name="confirmPassword"
             endContent={
               <button
+                aria-label="toggle password visibility"
                 className="focus:outline-none"
                 type="button"
                 onClick={toggleConfirmVisibility}
-                aria-label="toggle password visibility"
               >
                 {isConfirmVisible ? (
                   <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
@@ -136,24 +134,34 @@ export default function RegisterPage() {
                 )}
               </button>
             }
+            errorMessage={
+              !isPasswordMatch && registerInfo.confirmPassword
+                ? "Passwords do not match"
+                : undefined
+            }
+            label="Confirm Password"
+            name="confirmPassword"
+            placeholder="Confirm your password"
+            size="sm"
             type={isConfirmVisible ? "text" : "password"}
+            validationState={isPasswordMatch ? "valid" : "invalid"}
             value={registerInfo.confirmPassword}
             onChange={handleChange}
-            validationState={isPasswordMatch ? "valid" : "invalid"}
-            errorMessage={!isPasswordMatch && registerInfo.confirmPassword ? "Passwords do not match" : undefined}
           />
           <Button
-            type="submit"
-            size="sm"
-            color="primary"
             className="w-full"
+            color="primary"
             isDisabled={!isFormValid}
+            size="sm"
+            type="submit"
           >
             Register
           </Button>
         </form>
         <div className="w-full flex flex-row justify-end">
-          <Link href="/login" className="!text-sm text-indigo-500">Already have an account?</Link>
+          <Link className="!text-sm text-indigo-500" href="/login">
+            Already have an account?
+          </Link>
         </div>
       </CardBody>
     </Card>

@@ -2,14 +2,14 @@ import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
 import React from "react";
+import { Link } from "@nextui-org/link";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
-
-import { Providers } from "../providers";
 import { Logo } from "@/components/icons";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { Link } from "@nextui-org/link";
+
+import { Providers } from "../providers";
 
 export const metadata: Metadata = {
   title: {
@@ -45,18 +45,20 @@ export default function RootLayout({
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="h-screen w-full relative">
-            <ThemeSwitch className="absolute bottom-4 left-4"/>
+            <ThemeSwitch className="absolute bottom-4 left-4" />
             <div className="flex flex-col justify-center items-center h-screen gap-6">
-                <Link href="/" className="flex flex-row gap-2 flex-wrap items-center justify-center">
-                  <Logo size={50} />
-                  <p className="font-bold text-inherit text-5xl">{siteConfig.name}</p>
-                </Link>
-              <div>
-              {children}
-              </div>
+              <Link
+                className="flex flex-row gap-2 flex-wrap items-center justify-center"
+                href="/"
+              >
+                <Logo size={50} />
+                <p className="font-bold text-inherit text-5xl">
+                  {siteConfig.name}
+                </p>
+              </Link>
+              <div>{children}</div>
             </div>
           </div>
-
         </Providers>
       </body>
     </html>
