@@ -30,7 +30,7 @@ export const AnswerRadio: React.FC<AnswerRadioProps> = ({ value, letter, childre
             ${
           isSelected
             ? "bg-primary-foreground border-primary"
-            : "border-default bg-white"
+            : ""
         }`}
       >
         <div className="flex items-center">

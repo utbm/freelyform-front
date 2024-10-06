@@ -75,7 +75,7 @@ export const prefabs: Form[] = [
             type: InputType.MULTIPLE_CHOICE,
             options: { choices: ["Excellent", "Good", "Average", "Poor"] },
             validationRules: [
-              { type: ValidationRuleType.IS_RADIO },
+              { type: ValidationRuleType.IS_MULTIPLE_CHOICE },
             ],
             optional: false,
           },

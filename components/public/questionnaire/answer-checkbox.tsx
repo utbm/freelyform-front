@@ -27,7 +27,7 @@ export const AnswerCheckbox: React.FC<AnswerCheckboxProps> = ({ value, letter, c
         }}
         transition={{ duration: 0.3 }}
         className={`flex cursor-pointer items-center justify-between border p-2 rounded-lg 
-            ${isSelected ? "bg-primary-foreground" : ""}`}
+            ${isSelected ? "bg-primary-foreground border-primary" : ""}`}
       >
         <div className="flex items-center">
           <div
