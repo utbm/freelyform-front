@@ -4,7 +4,7 @@ import { Button, Divider, Input } from "@nextui-org/react";
 import { Link } from "@nextui-org/link";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import React from "react";
-import { EyeFilledIcon, EyeSlashFilledIcon } from "@nextui-org/shared-icons";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 // Define the LoginInfo interface
 interface LoginInfo {
@@ -69,9 +69,9 @@ export default function LoginPage() {
                 onClick={toggleVisibility}
               >
                 {isVisible ? (
-                  <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                  <FaEyeSlash className="text-2xl text-default-400 pointer-events-none" />
                 ) : (
-                  <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                  <FaEye className="text-2xl text-default-400 pointer-events-none" />
                 )}
               </button>
             }

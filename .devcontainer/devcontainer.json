@@ -1,0 +1,47 @@
+{
+  "name": "FreelyForm Frontend Development",
+  "dockerFile": "Dockerfile",
+  "context": "..",
+  "runArgs": ["--init"],
+  "postCreateCommand": "pnpm install",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": true
+        }
+      },
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "Prisma.prisma",
+        "ms-vsliveshare.vsliveshare",
+        "bradlc.vscode-tailwindcss"
+      ]
+    }
+  },
+  "remoteUser": "node",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    }
+  },
+  "mounts": [
+    "source=/pnpm,target=/pnpm,type=volume"
+  ],
+  "settings": {
+    "terminal.integrated.defaultProfile.linux": "bash"
+  },
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Next.js Dev Server",
+      "onAutoForward": "notify"
+    }
+  },
+  "workspaceFolder": "/workspace/freelyform-front",
+  "remoteEnv": {
+    "NODE_ENV": "development"
+  }
+}

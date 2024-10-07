@@ -1,5 +1,3 @@
-# Dockerfile
-
 # Common Base
 FROM node:22-alpine AS base
 
@@ -9,9 +7,9 @@ RUN corepack enable
 WORKDIR /app
 COPY package.json ./
 COPY pnpm-lock.yaml ./
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile  # Install all dependencies
 
-# Development Stage
+# Development Stage (if needed)
 FROM base AS development
 WORKDIR /app
 COPY . .
@@ -23,6 +21,12 @@ CMD ["pnpm", "run", "dev"]
 FROM base AS production
 WORKDIR /app
 COPY . .
+
+# Build the app
 RUN pnpm run build
+
+# Remove dev dependencies after build
+RUN pnpm prune --prod  # This will remove all dev dependencies, keeping only production dependencies.
+
 EXPOSE 3000
 CMD ["pnpm", "run", "start"]
