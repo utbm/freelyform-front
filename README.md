@@ -1,53 +1,32 @@
-# Next.js & NextUI Template
+# 🚀 FreelyForm Frontend
 
-This is a template for creating applications using Next.js 14 (app directory) and NextUI (v2).
+## 🌟 Présentation
+**FreelyForm Frontend** est une application web dynamique et responsive conçue pour gérer des **formulaires personnalisables** 📝. Ce projet est développé avec **Next.js** et utilise des technologies web modernes telles que **TailwindCSS**, **NextUI** et **TypeScript** pour offrir une expérience fluide de création et de gestion de formulaires.
 
-[Try it on CodeSandbox](https://githubbox.com/nextui-org/next-app-template)
+## ✨ Principales fonctionnalités
+- ⚙️ **Génération dynamique** de formulaires avec différents types de champs.
+- 🔐 **Authentification locale** et via OAuth2 avec **NextAuth** (Google).
+- 🖼️ Composants d'interface utilisateur modernes grâce à **NextUI**.
+- 🎨 Thème **responsive** et personnalisable avec **TailwindCSS**, incluant le support du **mode clair/sombre** 🌗.
+- 🐳 **Intégration avec Docker** et **CI/CD** pour un développement et un déploiement simplifiés.
+- 🛡️ Support complet de **TypeScript** pour la sécurité des types et la productivité des développeurs.
 
-## Technologies Used
-
-- [Next.js 14](https://nextjs.org/docs/getting-started)
-- [NextUI v2](https://nextui.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Tailwind Variants](https://tailwind-variants.org)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Framer Motion](https://www.framer.com/motion/)
-- [next-themes](https://github.com/pacocoursey/next-themes)
-
-## How to Use
-
-### Use the template with create-next-app
-
-To create a new project based on this template using `create-next-app`, run the following command:
+## 🚀 Démarrage rapide
+Pour démarrer le projet localement, suivez ces étapes :
 
 ```bash
-npx create-next-app -e https://github.com/nextui-org/next-app-template
-```
-
-### Install dependencies
-
-Use pnpm :
-
-```bash
-pnpm install
-```
-
-### Run the development server
-
-```bash
+git clone https://github.com/votre-repository/freelyform-front.git
+cd freelyform-front
+pnpm install # pnpm remplace npm pour une meilleure gestion des dépendances
 pnpm run dev
 ```
+Accédez ensuite à l'application sur http://localhost:3000.
 
-### Setup pnpm (optional)
 
-If you are using `pnpm`, you need to add the following code to your `.npmrc` file:
+## 📚 Documentation
 
-```bash
-public-hoist-pattern[]=*@nextui-org/*
-```
-
-After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
-
-## License
-
-Licensed under the [MIT license](https://github.com/nextui-org/next-app-template/blob/main/LICENSE).
+* [⚙️ Technologies](https://github.com/utbm/freelyform-front/wiki/Technologies.md)
+* [🐳 Dockerization](https://github.com/utbm/freelyform-front/wiki/Dockerization.md)
+* [📋 Data Structure](https://github.com/utbm/freelyform-front/wiki/DataStructure.md)
+  
+  
