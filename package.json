@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
+    "@midudev/tailwind-animations": "^0.1.0",
     "@nextui-org/accordion": "^2.0.40",
     "@nextui-org/autocomplete": "^2.1.7",
     "@nextui-org/avatar": "^2.0.33",

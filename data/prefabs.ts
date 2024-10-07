@@ -74,6 +74,7 @@ export const prefabs: Form[] = [
             label: "Rate your experience",
             type: InputType.MULTIPLE_CHOICE,
             options: { choices: ["Excellent", "Good", "Average", "Poor"] },
+            validationRules: [{ type: ValidationRuleType.IS_RADIO }],
             optional: false,
           },
           {
