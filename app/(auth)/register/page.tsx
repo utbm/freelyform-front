@@ -6,7 +6,6 @@ import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import React from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-
 // Define the RegisterInfo interface
 interface RegisterInfo {
   firstName: string;
