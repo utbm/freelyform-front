@@ -1,4 +1,4 @@
-name: CI with Docker Compose
+name: FreelyForm GITHUB CI
 
 on:
   push:
@@ -18,8 +18,8 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
+        # Removed the 'version' key to avoid conflicts
+        # The action will now use the version specified in package.json
 
       - name: Set up Node.js
         uses: actions/setup-node@v3

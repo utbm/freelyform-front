@@ -1,0 +1,20 @@
+{
+  "name": "Freelyform Frontend Dev",
+  "dockerComposeFile": "../docker-compose.dev.yml",
+  "service": "app",
+  "workspaceFolder": "/app",
+  "settings": {
+    "terminal.integrated.defaultProfile.linux": "bash"
+  },
+  "extensions": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "bradlc.vscode-tailwindcss"
+  ],
+  "forwardPorts": [3000],
+  "postCreateCommand": "pnpm install",
+  "remoteEnv": {
+    "NODE_ENV": "development"
+  },
+  "shutdownAction": "stopCompose"
+}

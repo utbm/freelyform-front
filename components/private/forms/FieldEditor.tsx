@@ -10,8 +10,8 @@ import { FormField } from "@/types/FormTypes";
 import { InputType } from "@/types/FormEnums";
 import { getInputTypeDisplay, getInputTypeIcon } from "@/lib/utils";
 
-import ValidationRulesEditor from "./ValidationRulesEditor";
 import MultipleChoiceOptionsEditor from "./MultipleChoiceOptionsEditor";
+import ValidationRulesEditor from "./ValidationRulesEditor";
 
 interface FieldEditorProps {
   field: FormField;
