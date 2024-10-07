@@ -9,7 +9,11 @@ interface AnswerRadioProps {
   children: React.ReactNode;
 }
 
-export const AnswerRadio: React.FC<AnswerRadioProps> = ({ value, letter, children }) => {
+export const AnswerRadio: React.FC<AnswerRadioProps> = ({
+  value,
+  letter,
+  children,
+}) => {
   const { isSelected, getBaseProps, getInputProps, getLabelProps } = useRadio({
     value,
   });
@@ -20,18 +24,14 @@ export const AnswerRadio: React.FC<AnswerRadioProps> = ({ value, letter, childre
         <input {...getInputProps()} />
       </VisuallyHidden>
       <motion.div
-        initial={{ scale: 1, opacity: 0 }}
         animate={{
           scale: isSelected ? 1.02 : 1,
           opacity: 1,
         }}
-        transition={{ duration: 0.1 }}
         className={`flex cursor-pointer items-center justify-between border p-2 rounded-lg transition-all duration-300 ease-in-out
-            ${
-          isSelected
-            ? "bg-primary-foreground border-primary"
-            : ""
-        }`}
+            ${isSelected ? "bg-primary-foreground border-primary" : ""}`}
+        initial={{ scale: 1, opacity: 0 }}
+        transition={{ duration: 0.1 }}
       >
         <div className="flex items-center">
           <div
@@ -44,8 +44,8 @@ export const AnswerRadio: React.FC<AnswerRadioProps> = ({ value, letter, childre
         </div>
         {isSelected && (
           <motion.div
-            initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
+            initial={{ scale: 0.5, opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
             <FaCheck className="text-primary" />

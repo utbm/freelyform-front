@@ -9,10 +9,15 @@ interface AnswerCheckboxProps {
   children: React.ReactNode;
 }
 
-export const AnswerCheckbox: React.FC<AnswerCheckboxProps> = ({ value, letter, children }) => {
-  const { isSelected, getBaseProps, getInputProps, getLabelProps } = useCheckbox({
-    value,
-  });
+export const AnswerCheckbox: React.FC<AnswerCheckboxProps> = ({
+  value,
+  letter,
+  children,
+}) => {
+  const { isSelected, getBaseProps, getInputProps, getLabelProps } =
+    useCheckbox({
+      value,
+    });
 
   return (
     <label {...getBaseProps()} className="w-full">
@@ -20,14 +25,14 @@ export const AnswerCheckbox: React.FC<AnswerCheckboxProps> = ({ value, letter, c
         <input {...getInputProps()} />
       </VisuallyHidden>
       <motion.div
-        initial={{ scale: 1, opacity: 0 }}
         animate={{
           scale: isSelected ? 1.02 : 1,
           opacity: 1,
         }}
-        transition={{ duration: 0.3 }}
         className={`flex cursor-pointer items-center justify-between border p-2 rounded-lg 
             ${isSelected ? "bg-primary-foreground border-primary" : ""}`}
+        initial={{ scale: 1, opacity: 0 }}
+        transition={{ duration: 0.3 }}
       >
         <div className="flex items-center">
           <div
@@ -40,8 +45,8 @@ export const AnswerCheckbox: React.FC<AnswerCheckboxProps> = ({ value, letter, c
         </div>
         {isSelected && (
           <motion.div
-            initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
+            initial={{ scale: 0.5, opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
             <FaCheck className="text-primary" />

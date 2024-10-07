@@ -54,7 +54,7 @@ const FormEditor: React.FC = () => {
 
   // Handle form submission
   const handleSubmit = () => {
-    console.log("Form data:", form);
+    // console.log("Form data:", form);
     // TODO: Send the form data to the server
   };
 
