@@ -1,6 +1,6 @@
 {
   "name": "Freelyform Frontend Dev",
-  "dockerComposeFile": "docker-compose.dev.yml",
+  "dockerComposeFile": "../docker-compose.dev.yml",
   "service": "app",
   "workspaceFolder": "/app",
   "settings": {
