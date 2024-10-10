@@ -3,6 +3,7 @@ import { Metadata, Viewport } from "next";
 import clsx from "clsx";
 import React from "react";
 import { Link } from "@nextui-org/link";
+import { Toaster } from "react-hot-toast";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
@@ -45,6 +46,9 @@ export default function RootLayout({
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="h-screen w-full relative">
+            <div>
+              <Toaster position="bottom-right" reverseOrder={false} />
+            </div>
             <ThemeSwitch className="absolute bottom-4 left-4" />
             <div className="flex flex-col justify-center items-center h-screen gap-6">
               <Link

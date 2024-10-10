@@ -11,6 +11,10 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+    env_file:
+      - .env.development
     environment:
-      NODE_ENV: development
+      - NODE_ENV=development
+      - NEXT_PUBLIC_BASE_API_URL=${NEXT_PUBLIC_BASE_API_URL}
+      - BASE_API_URL=${BASE_API_URL}
     command: pnpm run dev

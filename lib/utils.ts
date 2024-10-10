@@ -96,3 +96,33 @@ export function capitalize(str: string) {
 export function generateUniqueId() {
   return Math.random().toString(36).substr(2, 9);
 }
+
+export function storeJwtToken(jwtToken: string) {
+  const isValidJwt = /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]*$/.test(
+    jwtToken,
+  );
+
+  if (!isValidJwt) return false;
+
+  if (typeof localStorage !== "undefined") {
+    localStorage.setItem("session", jwtToken);
+
+    return true;
+  }
+
+  return false;
+}
+
+export function getJwtToken() {
+  if (typeof localStorage !== "undefined") {
+    return localStorage.getItem("session");
+  }
+
+  return null;
+}
+
+export function removeJwtToken() {
+  if (typeof localStorage !== "undefined") {
+    localStorage.removeItem("session");
+  }
+}

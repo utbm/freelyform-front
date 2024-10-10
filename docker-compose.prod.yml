@@ -8,6 +8,10 @@ services:
         NODE_ENV: production
     ports:
       - "3000:3000"
+    env_file:
+      - .env.production
     environment:
-      NODE_ENV: production
+      - NODE_ENV=production
+      - NEXT_PUBLIC_BASE_API_URL=${NEXT_PUBLIC_BASE_API_URL}
+      - BASE_API_URL=${BASE_API_URL}
     command: pnpm run start

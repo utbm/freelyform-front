@@ -15,4 +15,6 @@ export enum ValidationRuleType {
   REGEX_MATCH = "regex_match",
   MAX_LENGTH = "max_length",
   MIN_LENGTH = "min_length",
+  MAX_VALUE = "max_value",
+  MIN_VALUE = "min_value",
 }

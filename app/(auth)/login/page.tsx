@@ -5,6 +5,11 @@ import { Link } from "@nextui-org/link";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import React from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
+
+import { LoginUserRequest } from "@/types/AuthenticationInterfaces";
+import { loginUser } from "@/services/authentication";
 
 // Define the LoginInfo interface
 interface LoginInfo {
@@ -13,6 +18,7 @@ interface LoginInfo {
 }
 
 export default function LoginPage() {
+  const router = useRouter();
   const [isVisible, setIsVisible] = React.useState(false);
   const [loginInfo, setLoginInfo] = React.useState<LoginInfo>({
     email: "",
@@ -28,12 +34,20 @@ export default function LoginPage() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
-    // console.log("Login Info:", loginInfo);
-    // Redirect or update state as needed
-    // TODO: Implement the login with the server
+    const loginUserRequest: LoginUserRequest = {
+      email: loginInfo.email,
+      password: loginInfo.password,
+    };
+
+    try {
+      await loginUser(loginUserRequest);
+      toast.success("Login successful!");
+      router.push("/prefabs");
+    } catch (error: any) {
+      toast.error(error.message || "Login failed. Please try again.");
+    }
   };
 
   const isValidEmail = (email: string) => {

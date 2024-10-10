@@ -88,6 +88,7 @@
     "@react-aria/visually-hidden": "3.8.12",
     "@react-stately/data": "^3.11.7",
     "@types/canvas-confetti": "^1.6.4",
+    "axios": "^1.7.7",
     "canvas-confetti": "^1.9.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -116,12 +117,12 @@
     "recharts": "^2.12.7",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.2",
+    "tailwind-variants": "0.1.20",
+    "tailwindcss": "3.4.3",
     "tailwindcss-animate": "^1.0.7",
     "ts-node": "^10.9.2",
     "vaul": "^1.0.0",
-    "zod": "^3.23.8",
-    "tailwind-variants": "0.1.20",
-    "tailwindcss": "3.4.3"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@faker-js/faker": "^9.0.3",

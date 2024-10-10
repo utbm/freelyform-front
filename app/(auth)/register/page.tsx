@@ -1,10 +1,15 @@
 "use client";
 
+import React from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Button, Divider, Input } from "@nextui-org/react";
 import { Link } from "@nextui-org/link";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
-import React from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+
+import { RegisterUserRequest } from "@/types/AuthenticationInterfaces";
+import { registerUser } from "@/services/authentication";
 
 // Define the RegisterInfo interface
 interface RegisterInfo {
@@ -16,6 +21,7 @@ interface RegisterInfo {
 }
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [isVisible, setIsVisible] = React.useState(false);
   const [isConfirmVisible, setIsConfirmVisible] = React.useState(false);
   const [registerInfo, setRegisterInfo] = React.useState<RegisterInfo>({
@@ -36,12 +42,22 @@ export default function RegisterPage() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
-    // console.log("Register Info:", registerInfo);
-    // Redirect or update state as needed
-    // TODO: Implement the register with the server
+    const registerUserRequest: RegisterUserRequest = {
+      firstName: registerInfo.firstName,
+      lastName: registerInfo.lastName,
+      email: registerInfo.email,
+      password: registerInfo.password,
+    };
+
+    try {
+      await registerUser(registerUserRequest);
+      toast.success("Registration successful!");
+      router.push("/login");
+    } catch (error: any) {
+      toast.error(error.message || "Registration failed. Please try again.");
+    }
   };
 
   const isValidEmail = (email: string) => {
