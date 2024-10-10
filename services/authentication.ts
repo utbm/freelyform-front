@@ -1,7 +1,10 @@
 import axios from "axios";
 
 import { removeJwtToken, storeJwtToken } from "@/lib/utils";
-import { RegisterUserRequest } from "@/types/AuthenticationInterfaces";
+import {
+  LoginUserRequest,
+  RegisterUserRequest,
+} from "@/types/AuthenticationInterfaces";
 
 const API_URL = process.env.NEXT_PUBLIC_BASE_API_URL + "/auth";
 
@@ -15,13 +18,21 @@ export async function registerUser(registerUser: RegisterUserRequest) {
   }
 }
 
-export async function loginUser() {
-  // send the request to the server and handle the response
-  // TODO: implement this function
-  const jwtToken = "jwtToken";
+export async function loginUser(loginUser: LoginUserRequest) {
+  try {
+    const response = await axios.post(`${API_URL}/login`, loginUser);
+    // the response if correct should be { token : "jwtToken" }
+    const jwtToken = response.data.token;
 
-  // store the jwt token in the local storage using the utility function
-  storeJwtToken(jwtToken);
+    if (!jwtToken) throw new Error("Invalid token received from the server");
+    storeJwtToken(jwtToken);
+  } catch (error) {
+    throw new Error(
+      "An error occurred on the application while logging in the user (" +
+        error +
+        ")",
+    );
+  }
 }
 
 export async function logoutUser() {
