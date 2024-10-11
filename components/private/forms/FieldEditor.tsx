@@ -20,10 +20,10 @@ interface FieldEditorProps {
 }
 
 const FieldEditor: React.FC<FieldEditorProps> = ({
-  field,
-  onUpdateField,
-  onRemoveField,
-}) => {
+                                                   field,
+                                                   onUpdateField,
+                                                   onRemoveField,
+                                                 }) => {
   const handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onUpdateField({ ...field, label: e.target.value });
   };
