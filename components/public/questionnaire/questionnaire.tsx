@@ -245,7 +245,8 @@ export default function Questionnaire() {
       };
     });
 
-    console.log(result);
+    // console.log(result);
+
     return result;
     // TODO : Implement a way to send the results to the server
   };
