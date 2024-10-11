@@ -2,7 +2,11 @@
 
 import NextLink from "next/link";
 import {
-  Button,
+  Avatar,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Navbar as NextUINavbar,
   NavbarBrand,
   NavbarContent,
@@ -12,12 +16,40 @@ import {
   NavbarMenuToggle,
 } from "@nextui-org/react";
 import { Link } from "@nextui-org/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { siteConfig } from "@/config/site";
 import { GithubIcon, Logo } from "@/components/icons";
 import { ThemeSwitch } from "@/components/theme-switch";
+import { getLoggedUser, logoutUser } from "@/services/authentication";
+import { User } from "@/types/AuthenticationInterfaces";
 
 export const PrivateNavbar = () => {
+  const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
+
+  const logout = async () => {
+    await logoutUser();
+    setUser(null);
+    router.push("/");
+  };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const loggedUser = await getLoggedUser();
+
+      setUser(loggedUser);
+    };
+
+    fetchUser();
+  }, []);
+
+  // Optionally handle loading state
+  if (user === null) {
+    return null; // or a loading indicator
+  }
+
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -40,15 +72,29 @@ export const PrivateNavbar = () => {
           <ThemeSwitch />
         </NavbarItem>
         <NavbarItem className="hidden md:flex">
-          <Button
-            as={Link}
-            className="text-sm font-normal text-default-600 bg-default-100"
-            href={siteConfig.authentication.login.href}
-            size={"sm"}
-            variant="flat"
-          >
-            {siteConfig.authentication.login.label}
-          </Button>
+          <Dropdown placement="bottom-end">
+            <DropdownTrigger>
+              <Avatar
+                isBordered
+                as="button"
+                className="transition-transform"
+                color="secondary"
+                name="Jason Hughes"
+                size="sm"
+                src="https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250"
+              />
+            </DropdownTrigger>
+            <DropdownMenu aria-label="Profile Actions" variant="flat">
+              <DropdownItem key="profile" className="h-14 gap-2">
+                <p className="font-semibold">Signed in as</p>
+                <p className="font-semibold">{user.sub}</p>
+              </DropdownItem>
+              <DropdownItem key="prefabs">My prefabs</DropdownItem>
+              <DropdownItem key="logout" color="danger" onClick={logout}>
+                Log Out
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </NavbarItem>
       </NavbarContent>
 
