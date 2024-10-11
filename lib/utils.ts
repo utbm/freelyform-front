@@ -105,6 +105,9 @@ export function storeJwtToken(jwtToken: string) {
   if (!isValidJwt) return false;
 
   if (typeof localStorage !== "undefined") {
+    const expiresAt = Date.now() + 1800 * 1000; // Expires in 30 hour
+
+    localStorage.setItem("session_expiration", String(expiresAt));
     localStorage.setItem("session", jwtToken);
 
     return true;
@@ -113,7 +116,28 @@ export function storeJwtToken(jwtToken: string) {
   return false;
 }
 
+export function isExpiredJwtToken() {
+  if (typeof localStorage !== "undefined") {
+    const expiresAt = localStorage.getItem("session_expiration");
+
+    if (!expiresAt) return true;
+
+    const expired = Date.now() > parseInt(expiresAt, 10);
+
+    if (expired) removeJwtToken();
+
+    return expired;
+  }
+
+  return true;
+}
+
 export function getJwtToken() {
+  if (isExpiredJwtToken()) {
+    removeJwtToken();
+
+    return null;
+  }
   if (typeof localStorage !== "undefined") {
     return localStorage.getItem("session");
   }
@@ -124,5 +148,18 @@ export function getJwtToken() {
 export function removeJwtToken() {
   if (typeof localStorage !== "undefined") {
     localStorage.removeItem("session");
+    localStorage.removeItem("session_expiration");
   }
+}
+
+export function getJwtTokenData() {
+  const jwtToken = getJwtToken();
+
+  if (!jwtToken) return null;
+
+  const [, payload] = jwtToken.split(".");
+
+  const decodedPayload = atob(payload);
+
+  return JSON.parse(decodedPayload);
 }
