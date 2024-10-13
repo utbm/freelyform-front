@@ -3,12 +3,18 @@
 
 import React, { useState } from "react";
 import { Input, Textarea, Button } from "@nextui-org/react";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 import { Form, FormGroup } from "@/types/FormTypes";
 import GroupEditor from "@/components/private/forms/GroupEditor";
 import { generateUniqueId } from "@/lib/utils";
+import { createPrefab } from "@/services/prefabs";
+import { PrefabRequest } from "@/types/PrefabInterfaces";
 
 const FormEditor: React.FC = () => {
+  const router = useRouter();
+
   const [form, setForm] = useState<Form>({
     name: "",
     description: "",
@@ -53,9 +59,31 @@ const FormEditor: React.FC = () => {
   };
 
   // Handle form submission
-  const handleSubmit = () => {
-    // console.log("Form data:", form);
-    // TODO: Send the form data to the server
+  const handleSubmit = async () => {
+    try {
+      let tags = form.tags ?? [];
+
+      tags = tags.map((tag) => tag.trim());
+      const prefabRequest: PrefabRequest = {
+        name: form.name,
+        description: form.description,
+        tags: tags,
+        groups: form.groups,
+      };
+
+      if (form.name.trim() === "") {
+        toast.error("Form name is required");
+
+        return;
+      }
+
+      await createPrefab(prefabRequest);
+      toast.success("Questionnaire created successfully!");
+      router.push("/prefabs");
+    } catch (error) {
+      // @ts-ignore
+      toast.error(error);
+    }
   };
 
   return (

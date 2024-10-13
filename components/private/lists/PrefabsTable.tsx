@@ -1,3 +1,6 @@
+// components/private/forms/PrefabsTable.tsx
+"use client";
+
 import React from "react";
 import {
   Table,
@@ -20,14 +23,25 @@ import {
 import { FaPencil } from "react-icons/fa6";
 import { FaFileExcel, FaPlus, FaShare, FaTrash } from "react-icons/fa";
 import { Link } from "@nextui-org/link";
+import { toast } from "react-hot-toast"; // Import toast from react-hot-toast
 
 import {
   ChevronDownIcon,
   SearchIcon,
   VerticalDotsIcon,
 } from "@/components/icons";
-import { capitalize, generateUniqueId } from "@/lib/utils";
-import { prefabs } from "@/data/prefabs";
+import { capitalize } from "@/lib/utils";
+import { getPrefabs } from "@/services/prefabs";
+
+// Define the interface for your form data
+interface Form {
+  id: string;
+  name: string;
+  description: string;
+  tags?: string[];
+  groups: any[]; // Replace 'any' with the appropriate type if known
+  [key: string]: any; // For dynamic property access
+}
 
 const headerColumns = [
   { uid: "title", name: "Title" },
@@ -38,23 +52,48 @@ const headerColumns = [
 ];
 
 export default function PrefabsTable() {
-  const [filterValue, setFilterValue] = React.useState("");
+  const [prefabsData, setPrefabsData] = React.useState<Form[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const [error, setError] = React.useState<Error | null>(null);
+
+  React.useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await getPrefabs();
+        // Ensure each form has a unique 'id'
+        const dataWithIds = response.data.map((form: Form, index: number) => ({
+          ...form,
+          id: form.id || index.toString(),
+        }));
+
+        setPrefabsData(dataWithIds);
+        setLoading(false);
+      } catch (err: any) {
+        setError(err);
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
+  const [filterValue, setFilterValue] = React.useState<string>("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set());
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState<number>(5);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "title",
     direction: "ascending",
   });
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = React.useState<number>(1);
 
-  // Get all unique tags from the prefabs data and sort them
+  // Compute unique, sorted tags
   const uniqueTags = React.useMemo(() => {
-    const tags = prefabs.flatMap((form) => form.tags || []);
+    const tags = prefabsData
+      .flatMap((form: Form) => form.tags || [])
+      .map((tag: string) => tag.toString().trim().toLowerCase());
 
-    return Array.from(new Set(tags)).sort(); // Get unique sorted tags
-  }, []);
+    return Array.from(new Set(tags)).sort();
+  }, [prefabsData]);
 
-  // Initialize selectedTags as an empty set
   const [selectedTags, setSelectedTags] = React.useState<Set<string>>(
     new Set(),
   );
@@ -63,22 +102,24 @@ export default function PrefabsTable() {
   const hasTagFilter = selectedTags.size > 0;
 
   const filteredItems = React.useMemo(() => {
-    let filteredForms = [...prefabs];
+    let filteredForms = [...prefabsData];
 
     if (hasSearchFilter) {
-      filteredForms = filteredForms.filter((form) =>
+      filteredForms = filteredForms.filter((form: Form) =>
         form.name.toLowerCase().includes(filterValue.toLowerCase()),
       );
     }
 
     if (hasTagFilter) {
-      filteredForms = filteredForms.filter((form) =>
-        form.tags?.some((tag) => selectedTags.has(tag)),
+      filteredForms = filteredForms.filter((form: Form) =>
+        form.tags?.some((tag: string) =>
+          selectedTags.has(tag.toString().trim().toLowerCase()),
+        ),
       );
     }
 
     return filteredForms;
-  }, [filterValue, selectedTags, hasSearchFilter, hasTagFilter]);
+  }, [prefabsData, filterValue, selectedTags, hasSearchFilter, hasTagFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -90,7 +131,7 @@ export default function PrefabsTable() {
   }, [page, filteredItems, rowsPerPage]);
 
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a, b) => {
+    return [...items].sort((a: Form, b: Form) => {
       // @ts-ignore
       const first = a[sortDescriptor.column];
       // @ts-ignore
@@ -101,7 +142,24 @@ export default function PrefabsTable() {
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((form: any, columnKey: any) => {
+  // Function to handle copying the answer link to clipboard
+  const handleCopyLink = async (formId: string) => {
+    try {
+      // Construct the answer link URL
+      const answerLink = `${window.location.origin}/a/${formId}`;
+
+      // Copy the link to the clipboard
+      await navigator.clipboard.writeText(answerLink);
+
+      // Show success toast
+      toast.success("Answer link copied to clipboard!");
+    } catch (error) {
+      // Show error toast
+      toast.error("Failed to copy the link.");
+    }
+  };
+
+  const renderCell = React.useCallback((form: Form, columnKey: string) => {
     const cellValue = form[columnKey];
 
     switch (columnKey) {
@@ -110,9 +168,8 @@ export default function PrefabsTable() {
       case "description":
         return <span>{form.description}</span>;
       case "tags": {
-        // Generate <Chip size="sm" color="primary">Primary</Chip> for each tag
-        const tags = form.tags?.map((tag: any) => (
-          <Chip key={generateUniqueId()} color="default" size="sm">
+        const tags = form.tags?.map((tag: string) => (
+          <Chip key={tag} color="default" size="sm">
             {tag}
           </Chip>
         ));
@@ -131,7 +188,7 @@ export default function PrefabsTable() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem>
+                <DropdownItem onClick={() => handleCopyLink(form.id)}>
                   <div className="w-full flex flex-row gap-4 items-center">
                     <FaShare className="w-4" />
                     <span>Answer link</span>
@@ -164,24 +221,15 @@ export default function PrefabsTable() {
     }
   }, []);
 
-  const onNextPage = React.useCallback(() => {
-    if (page < pages) {
-      setPage(page + 1);
-    }
-  }, [page, pages]);
+  const onRowsPerPageChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      setRowsPerPage(Number(e.target.value));
+      setPage(1);
+    },
+    [],
+  );
 
-  const onPreviousPage = React.useCallback(() => {
-    if (page > 1) {
-      setPage(page - 1);
-    }
-  }, [page]);
-
-  const onRowsPerPageChange = React.useCallback((e: any) => {
-    setRowsPerPage(Number(e.target.value));
-    setPage(1);
-  }, []);
-
-  const onSearchChange = React.useCallback((value: any) => {
+  const onSearchChange = React.useCallback((value: string) => {
     setFilterValue(value);
     setPage(1);
   }, []);
@@ -191,10 +239,25 @@ export default function PrefabsTable() {
     setPage(1);
   }, []);
 
-  const onTagSelectionChange = React.useCallback((keys: any) => {
-    setSelectedTags(new Set(keys));
-    setPage(1);
-  }, []);
+  const onTagSelectionChange = React.useCallback(
+    (keys: Selection) => {
+      if (keys === "all") {
+        const allTags = uniqueTags.map((tag) =>
+          tag.toString().trim().toLowerCase(),
+        );
+
+        setSelectedTags(new Set(allTags));
+      } else {
+        const normalizedKeys = Array.from(keys).map((key) =>
+          key.toString().trim().toLowerCase(),
+        );
+
+        setSelectedTags(new Set(normalizedKeys));
+      }
+      setPage(1);
+    },
+    [uniqueTags, setPage],
+  );
 
   const topContent = React.useMemo(() => {
     return (
@@ -227,7 +290,7 @@ export default function PrefabsTable() {
                 onSelectionChange={onTagSelectionChange}
               >
                 {uniqueTags.map((tag) => (
-                  <DropdownItem key={tag} className="capitalize">
+                  <DropdownItem key={tag.toString()} className="capitalize">
                     {capitalize(tag)}
                   </DropdownItem>
                 ))}
@@ -268,7 +331,6 @@ export default function PrefabsTable() {
     rowsPerPage,
     filteredItems.length,
     onSearchChange,
-    hasSearchFilter,
     selectedTags,
     onTagSelectionChange,
     onClear,
@@ -288,19 +350,21 @@ export default function PrefabsTable() {
         />
       </div>
     );
-  }, [
-    selectedKeys,
-    filteredItems.length,
-    page,
-    pages,
-    onNextPage,
-    onPreviousPage,
-  ]);
+  }, [page, pages]);
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading prefabs: {error.message}</div>;
+  }
+
+  // @ts-ignore
   return (
     <Table
       isHeaderSticky
-      aria-label="Example table with custom cells, pagination and sorting"
+      aria-label="Table with data fetched from API"
       bottomContent={bottomContent}
       bottomContentPlacement="outside"
       classNames={{
@@ -325,9 +389,10 @@ export default function PrefabsTable() {
         )}
       </TableHeader>
       <TableBody emptyContent={"No forms found"} items={sortedItems}>
-        {(item) => (
-          <TableRow key={item.name}>
+        {(item: Form) => (
+          <TableRow key={item.id}>
             {(columnKey) => (
+              // @ts-ignore
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}
           </TableRow>
