@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import confetti from "canvas-confetti";
 
 import { InputType, ValidationRuleType } from "@/types/FormEnums";
 
@@ -62,32 +63,28 @@ export function getInputValidationRuleDisplay(type: ValidationRuleType) {
 
 // utils.ts or similar utility file
 
-export function getAvailableValidationRules(
+export const getAvailableValidationRules = (
   inputType: InputType,
-): ValidationRuleType[] {
+): ValidationRuleType[] => {
   switch (inputType) {
     case InputType.TEXT:
       return [
+        ValidationRuleType.MIN_LENGTH,
+        ValidationRuleType.MAX_LENGTH,
         ValidationRuleType.IS_EMAIL,
         ValidationRuleType.REGEX_MATCH,
-        ValidationRuleType.MAX_LENGTH,
-        ValidationRuleType.MIN_LENGTH,
       ];
     case InputType.NUMBER:
-      return [ValidationRuleType.MAX_LENGTH, ValidationRuleType.MIN_LENGTH];
-    case InputType.DATE:
-      return []; // No specific validation rules for date input
+      return [ValidationRuleType.MIN_VALUE, ValidationRuleType.MAX_VALUE];
     case InputType.MULTIPLE_CHOICE:
       return [
         ValidationRuleType.IS_RADIO,
         ValidationRuleType.IS_MULTIPLE_CHOICE,
       ];
-    case InputType.GEOLOCATION:
-      return []; // No specific validation rules for geolocation
     default:
       return [];
   }
-}
+};
 
 export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -162,4 +159,42 @@ export function getJwtTokenData() {
   const decodedPayload = atob(payload);
 
   return JSON.parse(decodedPayload);
+}
+
+export function throwConfettis() {
+  let count = 200;
+  let defaults = {
+    origin: { y: 0.7 },
+  };
+
+  function fire(particleRatio: number, opts: confetti.Options | undefined) {
+    confetti({
+      ...defaults,
+      ...opts,
+      particleCount: Math.floor(count * particleRatio),
+    });
+  }
+
+  fire(0.25, {
+    spread: 26,
+    startVelocity: 55,
+  });
+  fire(0.2, {
+    spread: 60,
+  });
+  fire(0.35, {
+    spread: 100,
+    decay: 0.91,
+    scalar: 0.8,
+  });
+  fire(0.1, {
+    spread: 120,
+    startVelocity: 25,
+    decay: 0.92,
+    scalar: 1.2,
+  });
+  fire(0.1, {
+    spread: 120,
+    startVelocity: 45,
+  });
 }

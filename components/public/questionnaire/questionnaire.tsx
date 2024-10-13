@@ -1,3 +1,5 @@
+// Questionnaire.tsx
+
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -7,20 +9,22 @@ import { CheckboxGroup } from "@nextui-org/checkbox";
 import { FaCheck, FaExclamationTriangle, FaArrowLeft } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { Spinner } from "@nextui-org/spinner";
 
 import { InputType, ValidationRuleType } from "@/types/FormEnums";
-import { prefabs } from "@/data/prefabs";
+import { Form, FormGroup, FormField, ValidationRule } from "@/types/FormTypes";
 import { AnswerCheckbox } from "@/components/public/questionnaire/answer-checkbox";
 import { AnswerRadio } from "@/components/public/questionnaire/answer-radio";
+import { getPrefabById } from "@/services/prefabs";
+import { throwConfettis } from "@/lib/utils";
 
-export default function Questionnaire() {
-  const form = prefabs[1]; // Assume we're using the first form; you can adjust as needed
-  const fields = React.useMemo(
-    () => form.groups.flatMap((group) => group.fields),
-    [form.groups],
-  );
-
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+export default function Questionnaire({ params }: { params: { id: string } }) {
+  // Initialize state variables with proper types
+  const router = useRouter();
+  const [form, setForm] = useState<Form | null>(null);
+  const [fields, setFields] = useState<FormField[]>([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [answers, setAnswers] = useState<Record<string, any>>({});
   const [errors, setErrors] = useState<Record<string, string | null>>({});
   const [radioSelected, setRadioSelected] = useState<string | null>(null); // For Radio buttons
@@ -29,15 +33,91 @@ export default function Questionnaire() {
     label: "Done",
     isError: false,
   });
-  const [isCompleted, setIsCompleted] = useState(false);
+  const [isCompleted, setIsCompleted] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const currentField = fields[currentQuestionIndex];
-  const currentGroup = form.groups.find((group) =>
-    group.fields.includes(currentField),
+  // Fetch the form data when the component mounts
+  useEffect(() => {
+    async function fetchForm() {
+      try {
+        const response = await getPrefabById(params.id);
+
+        const fetchedForm = response.data as Form;
+
+        setForm(fetchedForm);
+        // Initialize fields after fetching the form
+        setFields(
+          fetchedForm.groups.flatMap((group: FormGroup) => group.fields),
+        );
+      } catch (error) {
+        toast.error("An error occurred while fetching the form (not found)");
+        router.push("/prefabs");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchForm();
+  }, [params.id, router]);
+
+  // Ensure currentField and currentGroup are safely defined
+  const currentField: FormField | null =
+    fields.length > 0 ? fields[currentQuestionIndex] : null;
+  const currentGroup: FormGroup | undefined = form?.groups.find(
+    (group: FormGroup) => currentField && group.fields.includes(currentField),
   );
 
+  // Define handleNext and other functions
+  const handleNext = () => {
+    if (!currentField) return;
+    const isMultipleChoice: boolean =
+      currentField.type === InputType.MULTIPLE_CHOICE;
+
+    if (
+      (isMultipleChoice && validateMultipleChoice()) ||
+      (!isMultipleChoice && validateInput())
+    ) {
+      if (currentQuestionIndex < fields.length - 1) {
+        setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+        setButtonState({ label: "Done", isError: false }); // Reset button state for the next question
+        resetSelectionStates(); // Reset selection states when moving to the next question
+      } else {
+        // Log the results and complete the questionnaire
+        logResults();
+        setIsCompleted(true);
+      }
+    }
+  };
+
+  // Move the useEffect above the early return and ensure it always runs
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        e.preventDefault(); // Prevent default behavior
+        if (!loading) {
+          handleNext();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleGlobalKeyDown);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener("keydown", handleGlobalKeyDown);
+    };
+  }, [currentQuestionIndex, answers, loading, currentField]);
+
+  // Handle loading state
+  if (loading || !form || !currentField) {
+    return (
+      <div className="flex justify-center items-center mt-48">
+        <Spinner color="primary" size="lg" />
+      </div>
+    );
+  }
+
   // Determine if the current input is a small input
-  const isSmallInput = [
+  const isSmallInput: boolean = [
     InputType.TEXT,
     InputType.NUMBER,
     InputType.DATE,
@@ -47,24 +127,26 @@ export default function Questionnaire() {
   const marginTopClass = isSmallInput ? "mt-24" : "mt-18";
 
   const handleInputChange = (value: string | string[] | null) => {
-    setAnswers({
-      ...answers,
-      [currentField.id]: value,
-    });
-    setErrors({
-      ...errors,
-      [currentField.id]: null,
-    });
+    setAnswers((prevAnswers) => ({
+      ...prevAnswers,
+      [currentField!.id]: value,
+    }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [currentField!.id]: null,
+    }));
     setButtonState({ label: "Done", isError: false }); // Reset button state when input is modified
   };
 
-  const validateInput = () => {
+  const validateInput = (): boolean => {
+    if (!currentField) return false;
     const value = answers[currentField.id];
-    const validationRules = currentField.validationRules || [];
+    const validationRules: ValidationRule[] =
+      currentField.validationRules || [];
     let error: string | null = null;
 
     // Check for empty values based on input type
-    const isEmptyValue = () => {
+    const isEmptyValue = (): boolean => {
       switch (currentField.type) {
         case InputType.TEXT:
         case InputType.DATE:
@@ -90,14 +172,14 @@ export default function Questionnaire() {
       for (let rule of validationRules) {
         switch (rule.type) {
           case ValidationRuleType.MIN_LENGTH: {
-            if (!value || (value as string).length < rule.value) {
+            if (!value || (value as string).length < (rule.value as number)) {
               error = `Minimum length is ${rule.value}`;
               setButtonState({ label: "Too short", isError: true });
             }
             break;
           }
           case ValidationRuleType.MAX_LENGTH: {
-            if (value && (value as string).length > rule.value) {
+            if (value && (value as string).length > (rule.value as number)) {
               error = `Maximum length is ${rule.value}`;
               setButtonState({ label: "Too long", isError: true });
             }
@@ -113,7 +195,7 @@ export default function Questionnaire() {
             break;
           }
           case ValidationRuleType.REGEX_MATCH: {
-            const regex = new RegExp(rule.value);
+            const regex = new RegExp(rule.value as string);
 
             if (value && !regex.test(value as string)) {
               error = "Invalid format";
@@ -124,7 +206,7 @@ export default function Questionnaire() {
           case ValidationRuleType.MIN_VALUE: {
             const numValue = Number(value);
 
-            if (isNaN(numValue) || numValue < rule.value) {
+            if (isNaN(numValue) || numValue < (rule.value as number)) {
               error = `Value must be at least ${rule.value}`;
               setButtonState({ label: `Min ${rule.value}`, isError: true });
             }
@@ -133,7 +215,7 @@ export default function Questionnaire() {
           case ValidationRuleType.MAX_VALUE: {
             const numValue = Number(value);
 
-            if (isNaN(numValue) || numValue > rule.value) {
+            if (isNaN(numValue) || numValue > (rule.value as number)) {
               error = `Value must be at most ${rule.value}`;
               setButtonState({ label: `Max ${rule.value}`, isError: true });
             }
@@ -147,10 +229,10 @@ export default function Questionnaire() {
     }
 
     if (error) {
-      setErrors({
-        ...errors,
+      setErrors((prevErrors) => ({
+        ...prevErrors,
         [currentField.id]: error,
-      });
+      }));
       toast.error(error, { duration: 4000 }); // Show the error message in a toast
 
       return false;
@@ -159,14 +241,15 @@ export default function Questionnaire() {
     return true;
   };
 
-  const validateMultipleChoice = () => {
+  const validateMultipleChoice = (): boolean => {
+    if (!currentField) return false;
     const value = answers[currentField.id] || [];
 
     if (!currentField.optional && value.length === 0) {
-      setErrors({
-        ...errors,
+      setErrors((prevErrors) => ({
+        ...prevErrors,
         [currentField.id]: "At least one option must be selected",
-      });
+      }));
       toast.error("At least one option must be selected", { duration: 4000 });
       setButtonState({ label: "Required", isError: true });
 
@@ -176,28 +259,10 @@ export default function Questionnaire() {
     return true;
   };
 
-  const handleNext = () => {
-    const isMultipleChoice = currentField.type === InputType.MULTIPLE_CHOICE;
-
-    if (
-      (isMultipleChoice && validateMultipleChoice()) ||
-      (!isMultipleChoice && validateInput())
-    ) {
-      if (currentQuestionIndex < fields.length - 1) {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
-        setButtonState({ label: "Done", isError: false }); // Reset button state for the next question
-        resetSelectionStates(); // Reset selection states when moving to the next question
-      } else {
-        // Log the results and complete the questionnaire
-        logResults();
-        setIsCompleted(true);
-      }
-    }
-  };
-
   const handlePrevious = () => {
+    if (!currentField) return;
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
+      setCurrentQuestionIndex((prevIndex) => prevIndex - 1);
       setButtonState({ label: "Done", isError: false }); // Reset button state for the previous question
 
       // Reset selection states for radio and checkbox inputs based on previous answers
@@ -206,7 +271,7 @@ export default function Questionnaire() {
 
       if (previousField.type === InputType.MULTIPLE_CHOICE) {
         const isRadio = previousField.validationRules?.some(
-          (rule) => rule.type === ValidationRuleType.IS_RADIO,
+          (rule: ValidationRule) => rule.type === ValidationRuleType.IS_RADIO,
         );
 
         if (isRadio) {
@@ -220,9 +285,10 @@ export default function Questionnaire() {
 
   // Function to reset selection states when moving to the next question
   const resetSelectionStates = () => {
+    if (!currentField) return;
     if (currentField.type === InputType.MULTIPLE_CHOICE) {
       const isRadio = currentField.validationRules?.some(
-        (rule) => rule.type === ValidationRuleType.IS_RADIO,
+        (rule: ValidationRule) => rule.type === ValidationRuleType.IS_RADIO,
       );
 
       if (isRadio) {
@@ -235,10 +301,10 @@ export default function Questionnaire() {
 
   // Function to log results in the format of the prefab
   const logResults = () => {
-    const result = form.groups.map((group) => {
+    const result = form!.groups.map((group: FormGroup) => {
       return {
         group: group.name,
-        questions: group.fields.map((field) => ({
+        questions: group.fields.map((field: FormField) => ({
           question: field.label,
           answer: answers[field.id] || "No answer",
         })),
@@ -246,6 +312,7 @@ export default function Questionnaire() {
     });
 
     // console.log(result);
+    throwConfettis();
 
     return result;
     // TODO : Implement a way to send the results to the server
@@ -264,35 +331,16 @@ export default function Questionnaire() {
     return result;
   };
 
-  // Global keydown handler
-  useEffect(() => {
-    const handleGlobalKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Enter") {
-        e.preventDefault(); // Prevent default behavior
-        handleNext();
-      }
-    };
-
-    window.addEventListener("keydown", handleGlobalKeyDown);
-
-    // Cleanup the event listener on component unmount
-    return () => {
-      window.removeEventListener("keydown", handleGlobalKeyDown);
-    };
-  }, [currentQuestionIndex, answers]);
-
   const renderInputField = () => {
+    if (!currentField) return null;
     const error = errors[currentField.id];
     const commonProps = {
-      placeholder: currentField.label,
       value: answers[currentField.id] || "",
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         handleInputChange(e.target.value),
       isInvalid: !!error,
       errorMessage: error,
       fullWidth: true,
-      // Remove the onKeyDown handler from individual inputs
-      // onKeyDown: handleKeyDown,
     };
 
     switch (currentField.type) {
@@ -301,10 +349,11 @@ export default function Questionnaire() {
       }
       case InputType.MULTIPLE_CHOICE: {
         const isRadio = currentField.validationRules?.some(
-          (rule) => rule.type === ValidationRuleType.IS_RADIO,
+          (rule: ValidationRule) => rule.type === ValidationRuleType.IS_RADIO,
         );
         const isMultipleChoice = currentField.validationRules?.some(
-          (rule) => rule.type === ValidationRuleType.IS_MULTIPLE_CHOICE,
+          (rule: ValidationRule) =>
+            rule.type === ValidationRuleType.IS_MULTIPLE_CHOICE,
         );
 
         if (isRadio && currentField.options && currentField.options.choices) {
@@ -321,15 +370,17 @@ export default function Questionnaire() {
                 handleInputChange(val);
               }}
             >
-              {currentField.options.choices.map((choice, index) => (
-                <AnswerRadio
-                  key={choice}
-                  letter={getColumnLetter(index)} // Use the getColumnLetter function
-                  value={choice}
-                >
-                  {choice}
-                </AnswerRadio>
-              ))}
+              {currentField.options.choices.map(
+                (choice: string, index: number) => (
+                  <AnswerRadio
+                    key={choice}
+                    letter={getColumnLetter(index)}
+                    value={choice}
+                  >
+                    {choice}
+                  </AnswerRadio>
+                ),
+              )}
             </RadioGroup>
           );
         } else if (
@@ -350,15 +401,17 @@ export default function Questionnaire() {
                 handleInputChange(vals);
               }}
             >
-              {currentField.options.choices.map((choice, index) => (
-                <AnswerCheckbox
-                  key={choice}
-                  letter={getColumnLetter(index)} // Use the getColumnLetter function
-                  value={choice}
-                >
-                  {choice}
-                </AnswerCheckbox>
-              ))}
+              {currentField.options.choices.map(
+                (choice: string, index: number) => (
+                  <AnswerCheckbox
+                    key={choice}
+                    letter={getColumnLetter(index)}
+                    value={choice}
+                  >
+                    {choice}
+                  </AnswerCheckbox>
+                ),
+              )}
             </CheckboxGroup>
           );
         }
@@ -373,12 +426,12 @@ export default function Questionnaire() {
         let maxValue: number | undefined = undefined;
 
         if (currentField.validationRules) {
-          currentField.validationRules.forEach((rule) => {
+          currentField.validationRules.forEach((rule: ValidationRule) => {
             if (rule.type === ValidationRuleType.MIN_VALUE) {
-              minValue = rule.value;
+              minValue = rule.value as number;
             }
             if (rule.type === ValidationRuleType.MAX_VALUE) {
-              maxValue = rule.value;
+              maxValue = rule.value as number;
             }
           });
         }

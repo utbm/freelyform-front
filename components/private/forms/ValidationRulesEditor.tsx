@@ -34,6 +34,9 @@ const ValidationRulesEditor: React.FC<ValidationRulesEditorProps> = ({
   const [multipleChoiceType, setMultipleChoiceType] = useState<string | null>(
     null,
   ); // State for dropdown selection
+  const [errors, setErrors] = useState<{
+    [key in ValidationRuleType]?: string;
+  }>({}); // State for validation errors
 
   // Synchronize localRules with validationRules prop
   useEffect(() => {
@@ -79,6 +82,9 @@ const ValidationRulesEditor: React.FC<ValidationRulesEditorProps> = ({
     }
     setLocalRules(updatedRules);
     onUpdateValidationRules(updatedRules);
+
+    // Validate coherence if necessary
+    validateMinMaxValues(updatedRules);
   };
 
   // Toggle validation rule (used for non-MULTIPLE_CHOICE types)
@@ -89,6 +95,13 @@ const ValidationRulesEditor: React.FC<ValidationRulesEditorProps> = ({
     if (ruleIndex !== -1) {
       // Remove the rule if it exists
       updatedRules.splice(ruleIndex, 1);
+      setErrors((prevErrors) => {
+        const newErrors = { ...prevErrors };
+
+        delete newErrors[type];
+
+        return newErrors;
+      });
     } else {
       // Add the rule
       updatedRules.push({ type });
@@ -96,6 +109,14 @@ const ValidationRulesEditor: React.FC<ValidationRulesEditorProps> = ({
 
     setLocalRules(updatedRules); // Update the local state
     onUpdateValidationRules(updatedRules); // Sync the state with the parent component
+
+    // Validate coherence if necessary
+    if (
+      type === ValidationRuleType.MIN_VALUE ||
+      type === ValidationRuleType.MAX_VALUE
+    ) {
+      validateMinMaxValues(updatedRules);
+    }
   };
 
   // Get the current value of a rule
@@ -107,7 +128,7 @@ const ValidationRulesEditor: React.FC<ValidationRulesEditorProps> = ({
 
   // Update the value of a validation rule (e.g., for regex or length)
   const updateValidationRuleValue = (type: ValidationRuleType, value: any) => {
-    const updatedRules = localRules.map((rule) => {
+    let updatedRules = localRules.map((rule) => {
       if (rule.type === type) {
         return { ...rule, value };
       }
@@ -117,6 +138,45 @@ const ValidationRulesEditor: React.FC<ValidationRulesEditorProps> = ({
 
     setLocalRules(updatedRules); // Update the local state
     onUpdateValidationRules(updatedRules); // Sync the state with the parent component
+
+    // Validate coherence between MIN_VALUE and MAX_VALUE
+    if (
+      type === ValidationRuleType.MIN_VALUE ||
+      type === ValidationRuleType.MAX_VALUE
+    ) {
+      validateMinMaxValues(updatedRules);
+    }
+  };
+
+  // Validate that MIN_VALUE <= MAX_VALUE
+  const validateMinMaxValues = (rules: ValidationRule[]) => {
+    const minRule = rules.find(
+      (rule) => rule.type === ValidationRuleType.MIN_VALUE,
+    );
+    const maxRule = rules.find(
+      (rule) => rule.type === ValidationRuleType.MAX_VALUE,
+    );
+
+    const minValue = minRule ? Number(minRule.value) : undefined;
+    const maxValue = maxRule ? Number(maxRule.value) : undefined;
+
+    let newErrors: { [key in ValidationRuleType]?: string } = {};
+
+    if (
+      minValue !== undefined &&
+      maxValue !== undefined &&
+      !isNaN(minValue) &&
+      !isNaN(maxValue)
+    ) {
+      if (minValue > maxValue) {
+        newErrors[ValidationRuleType.MIN_VALUE] =
+          "Min value cannot be greater than Max value";
+        newErrors[ValidationRuleType.MAX_VALUE] =
+          "Max value cannot be less than Min value";
+      }
+    }
+
+    setErrors(newErrors);
   };
 
   // Get available validation rules based on input type
@@ -134,7 +194,7 @@ const ValidationRulesEditor: React.FC<ValidationRulesEditorProps> = ({
           <Button
             color="success"
             size="sm"
-            onPress={() => setIsPopoverOpen(true)}
+            // Removed onPress to prevent popover from closing when toggling switches
           >
             Rules
           </Button>
@@ -178,7 +238,13 @@ const ValidationRulesEditor: React.FC<ValidationRulesEditorProps> = ({
                           ? "Max Length"
                           : type === ValidationRuleType.MIN_LENGTH
                             ? "Min Length"
-                            : "Regex Match"}
+                            : type === ValidationRuleType.REGEX_MATCH
+                              ? "Regex Match"
+                              : type === ValidationRuleType.MAX_VALUE
+                                ? "Max Value"
+                                : type === ValidationRuleType.MIN_VALUE
+                                  ? "Min Value"
+                                  : ""}
                     </span>
                     <Switch
                       classNames={{
@@ -191,54 +257,41 @@ const ValidationRulesEditor: React.FC<ValidationRulesEditorProps> = ({
                     />
                   </div>
                   {/* Display input fields for applicable rules */}
-                  {type === ValidationRuleType.MAX_LENGTH &&
+                  {(type === ValidationRuleType.MAX_LENGTH ||
+                    type === ValidationRuleType.MIN_LENGTH ||
+                    type === ValidationRuleType.MAX_VALUE ||
+                    type === ValidationRuleType.MIN_VALUE ||
+                    type === ValidationRuleType.REGEX_MATCH) &&
                     localRules.some((rule) => rule.type === type) && (
                       <div className="mt-2">
                         <Input
                           fullWidth
-                          placeholder="Enter max length"
-                          size="sm"
-                          type="number" // Number type for max length
-                          value={getRuleValue(ValidationRuleType.MAX_LENGTH)}
-                          onChange={(e) =>
-                            updateValidationRuleValue(
-                              ValidationRuleType.MAX_LENGTH,
-                              e.target.value,
-                            )
+                          errorMessage={errors[type]}
+                          isInvalid={!!errors[type]}
+                          placeholder={
+                            type === ValidationRuleType.MAX_LENGTH
+                              ? "Enter max length"
+                              : type === ValidationRuleType.MIN_LENGTH
+                                ? "Enter min length"
+                                : type === ValidationRuleType.MAX_VALUE
+                                  ? "Enter max value"
+                                  : type === ValidationRuleType.MIN_VALUE
+                                    ? "Enter min value"
+                                    : "Enter regex"
                           }
-                        />
-                      </div>
-                    )}
-                  {type === ValidationRuleType.MIN_LENGTH &&
-                    localRules.some((rule) => rule.type === type) && (
-                      <div className="mt-2">
-                        <Input
-                          fullWidth
-                          placeholder="Enter min length"
                           size="sm"
-                          type="number" // Number type for min length
-                          value={getRuleValue(ValidationRuleType.MIN_LENGTH)}
+                          type={
+                            type === ValidationRuleType.REGEX_MATCH
+                              ? "text"
+                              : "number"
+                          } // Use text for regex
+                          value={getRuleValue(type)}
                           onChange={(e) =>
                             updateValidationRuleValue(
-                              ValidationRuleType.MIN_LENGTH,
-                              e.target.value,
-                            )
-                          }
-                        />
-                      </div>
-                    )}
-                  {type === ValidationRuleType.REGEX_MATCH &&
-                    localRules.some((rule) => rule.type === type) && (
-                      <div className="mt-2">
-                        <Input
-                          fullWidth
-                          placeholder="Enter regex"
-                          size="sm"
-                          value={getRuleValue(ValidationRuleType.REGEX_MATCH)}
-                          onChange={(e) =>
-                            updateValidationRuleValue(
-                              ValidationRuleType.REGEX_MATCH,
-                              e.target.value,
+                              type,
+                              type === ValidationRuleType.REGEX_MATCH
+                                ? e.target.value
+                                : e.target.value,
                             )
                           }
                         />

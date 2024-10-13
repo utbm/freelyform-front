@@ -89,7 +89,14 @@ export const PrivateNavbar = () => {
                 <p className="font-semibold">Signed in as</p>
                 <p className="font-semibold">{user.sub}</p>
               </DropdownItem>
-              <DropdownItem key="prefabs">My prefabs</DropdownItem>
+              <DropdownItem
+                key="prefabs"
+                onClick={() => {
+                  router.push("/prefabs");
+                }}
+              >
+                My prefabs
+              </DropdownItem>
               <DropdownItem key="logout" color="danger" onClick={logout}>
                 Log Out
               </DropdownItem>
