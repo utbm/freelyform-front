@@ -18,6 +18,8 @@ import { AnswerCheckbox } from "@/components/public/questionnaire/answer-checkbo
 import { AnswerRadio } from "@/components/public/questionnaire/answer-radio";
 import { getPrefabById } from "@/services/prefabs";
 import { throwConfettis } from "@/lib/utils";
+import { useAuth } from "@/contexts/AuthContext";
+import { AnswerRequest } from "@/types/AnswerInterfaces";
 
 export default function Questionnaire({ params }: { params: { id: string } }) {
   // Initialize state variables with proper types
@@ -35,12 +37,13 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
   });
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const { token } = useAuth();
 
   // Fetch the form data when the component mounts
   useEffect(() => {
     async function fetchForm() {
       try {
-        const response = await getPrefabById(params.id);
+        const response = await getPrefabById(token, params.id);
 
         const fetchedForm = response.data as Form;
 
@@ -301,7 +304,7 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
 
   // Function to log results in the format of the prefab
   const logResults = () => {
-    const result = form!.groups.map((group: FormGroup) => {
+    let result = form!.groups.map((group: FormGroup) => {
       return {
         group: group.name,
         questions: group.fields.map((field: FormField) => ({
@@ -312,7 +315,12 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
     });
 
     // console.log(result);
+    // cast result as AnswerRequest
+    const answerRequest : AnswerRequest = {
+      answers: result,
+    }
     throwConfettis();
+    console.log(answerRequest);
 
     return result;
     // TODO : Implement a way to send the results to the server

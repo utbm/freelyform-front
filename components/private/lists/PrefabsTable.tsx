@@ -19,6 +19,12 @@ import {
   Chip,
   SortDescriptor,
   Selection,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
 } from "@nextui-org/react";
 import { FaPencil } from "react-icons/fa6";
 import { FaFileExcel, FaPlus, FaShare, FaTrash } from "react-icons/fa";
@@ -31,7 +37,8 @@ import {
   VerticalDotsIcon,
 } from "@/components/icons";
 import { capitalize } from "@/lib/utils";
-import { getPrefabs } from "@/services/prefabs";
+import { getPrefabs, deletePrefab } from "@/services/prefabs"; // Import deletePrefab
+import { useAuth } from "@/contexts/AuthContext";
 
 // Define the interface for your form data
 interface Form {
@@ -55,26 +62,36 @@ export default function PrefabsTable() {
   const [prefabsData, setPrefabsData] = React.useState<Form[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<Error | null>(null);
+  const { token } = useAuth();
+
+  // State for deletion modal
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [selectedPrefab, setSelectedPrefab] = React.useState<Form | null>(null);
+  const [deleting, setDeleting] = React.useState<boolean>(false); // Loading state for deletion
+
+  // Fetch Data Function
+  const fetchData = React.useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await getPrefabs(token);
+      // Ensure each form has a unique 'id'
+      const dataWithIds = response.data.map((form: Form, index: number) => ({
+        ...form,
+        id: form.id || index.toString(),
+      }));
+
+      setPrefabsData(dataWithIds);
+    } catch (err: any) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [token]);
 
   React.useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await getPrefabs();
-        // Ensure each form has a unique 'id'
-        const dataWithIds = response.data.map((form: Form, index: number) => ({
-          ...form,
-          id: form.id || index.toString(),
-        }));
-
-        setPrefabsData(dataWithIds);
-        setLoading(false);
-      } catch (err: any) {
-        setError(err);
-        setLoading(false);
-      }
-    }
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const [filterValue, setFilterValue] = React.useState<string>("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set());
@@ -159,67 +176,97 @@ export default function PrefabsTable() {
     }
   };
 
-  const renderCell = React.useCallback((form: Form, columnKey: string) => {
-    const cellValue = form[columnKey];
+  // Function to handle delete action
+  const handleDelete = (form: Form) => {
+    setSelectedPrefab(form);
+    onOpen();
+  };
 
-    switch (columnKey) {
-      case "title":
-        return <span>{form.name}</span>;
-      case "description":
-        return <span>{form.description}</span>;
-      case "tags": {
-        const tags = form.tags?.map((tag: string) => (
-          <Chip key={tag} color="default" size="sm">
-            {tag}
-          </Chip>
-        ));
+  // Function to confirm deletion
+  const confirmDelete = async () => {
+    if (!selectedPrefab) return;
 
-        return <span className="flex flex-row gap-2">{tags}</span>;
-      }
-      case "groups":
-        return <span>{form.groups.length}</span>;
-      case "actions":
-        return (
-          <div className="relative flex justify-end items-center gap-2">
-            <Dropdown>
-              <DropdownTrigger>
-                <Button isIconOnly size="sm" variant="light">
-                  <VerticalDotsIcon className="text-default-300" />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem onClick={() => handleCopyLink(form.id)}>
-                  <div className="w-full flex flex-row gap-4 items-center">
-                    <FaShare className="w-4" />
-                    <span>Answer link</span>
-                  </div>
-                </DropdownItem>
-                <DropdownItem>
-                  <div className="w-full flex flex-row gap-4 items-center">
-                    <FaFileExcel className="w-4" />
-                    <span>Download answers</span>
-                  </div>
-                </DropdownItem>
-                <DropdownItem>
-                  <div className="w-full flex flex-row gap-4 items-center">
-                    <FaPencil className="w-4" />
-                    <span>Edit</span>
-                  </div>
-                </DropdownItem>
-                <DropdownItem>
-                  <div className="w-full flex flex-row gap-4 items-center">
-                    <FaTrash className="w-4" />
-                    <span>Delete</span>
-                  </div>
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </div>
-        );
-      default:
-        return cellValue;
+    setDeleting(true);
+    try {
+      await deletePrefab(token, selectedPrefab.id); // Assuming deletePrefab is implemented
+
+      toast.success(`Prefab "${selectedPrefab.name}" deleted successfully!`);
+
+      // Re-fetch the prefabs data
+      await fetchData();
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.message || "Failed to delete the prefab.",
+      );
+    } finally {
+      setDeleting(false);
+      // @ts-ignore
+      onOpenChange(false);
     }
-  }, []);
+  };
+
+  const renderCell = React.useCallback(
+    (form: Form, columnKey: string) => {
+      const cellValue = form[columnKey];
+
+      switch (columnKey) {
+        case "title":
+          return <span>{form.name}</span>;
+        case "description":
+          return <span>{form.description}</span>;
+        case "tags": {
+          const tags = form.tags?.map((tag: string) => (
+            <Chip key={tag} color="default" size="sm">
+              {tag}
+            </Chip>
+          ));
+
+          return <span className="flex flex-row gap-2 flex-wrap">{tags}</span>;
+        }
+        case "actions":
+          return (
+            <div className="relative flex justify-center items-center gap-2">
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button isIconOnly size="sm" variant="light">
+                    <VerticalDotsIcon className="text-default-300" />
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu>
+                  <DropdownItem onClick={() => handleCopyLink(form.id)}>
+                    <div className="w-full flex flex-row gap-4 items-center">
+                      <FaShare className="w-4" />
+                      <span>Answer link</span>
+                    </div>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <div className="w-full flex flex-row gap-4 items-center">
+                      <FaFileExcel className="w-4" />
+                      <span>Download answers</span>
+                    </div>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <div className="w-full flex flex-row gap-4 items-center">
+                      <FaPencil className="w-4" />
+                      <span>Edit</span>
+                    </div>
+                  </DropdownItem>
+                  <DropdownItem onClick={() => handleDelete(form)}>
+                    <div className="w-full flex flex-row gap-4 items-center">
+                      <FaTrash className="w-4" />
+                      <span>Delete</span>
+                    </div>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </div>
+          );
+        default:
+          return cellValue;
+      }
+    },
+    [prefabsData],
+  );
 
   const onRowsPerPageChange = React.useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -360,44 +407,81 @@ export default function PrefabsTable() {
     return <div>Error loading prefabs: {error.message}</div>;
   }
 
-  // @ts-ignore
   return (
-    <Table
-      isHeaderSticky
-      aria-label="Table with data fetched from API"
-      bottomContent={bottomContent}
-      bottomContentPlacement="outside"
-      classNames={{
-        wrapper: "max-h-[382px]",
-      }}
-      selectedKeys={selectedKeys}
-      sortDescriptor={sortDescriptor}
-      topContent={topContent}
-      topContentPlacement="outside"
-      onSelectionChange={setSelectedKeys}
-      onSortChange={setSortDescriptor}
-    >
-      <TableHeader columns={headerColumns}>
-        {(column) => (
-          <TableColumn
-            key={column.uid}
-            align={column.uid === "actions" ? "center" : "start"}
-            allowsSorting={true}
-          >
-            {column.name}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody emptyContent={"No forms found"} items={sortedItems}>
-        {(item: Form) => (
-          <TableRow key={item.id}>
-            {(columnKey) => (
-              // @ts-ignore
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
-            )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+    <>
+      <Table
+        isHeaderSticky
+        aria-label="Table with data fetched from API"
+        bottomContent={bottomContent}
+        bottomContentPlacement="outside"
+        classNames={{
+          wrapper: "max-h-[382px]",
+        }}
+        selectedKeys={selectedKeys}
+        sortDescriptor={sortDescriptor}
+        topContent={topContent}
+        topContentPlacement="outside"
+        onSelectionChange={setSelectedKeys}
+        onSortChange={setSortDescriptor}
+      >
+        <TableHeader columns={headerColumns}>
+          {(column) => (
+            <TableColumn
+              key={column.uid}
+              align={column.uid === "actions" ? "center" : "start"}
+              allowsSorting={true}
+            >
+              {column.name}
+            </TableColumn>
+          )}
+        </TableHeader>
+        <TableBody emptyContent={"No forms found"} items={sortedItems}>
+          {(item: Form) => (
+            <TableRow key={item.id}>
+              {(columnKey) => (
+                // @ts-ignore
+                <TableCell>{renderCell(item, columnKey)}</TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+
+      {/* Confirm Deletion Modal */}
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Confirm Deletion
+              </ModalHeader>
+              <ModalBody>
+                <p>
+                  Are you sure you want to delete the prefab "
+                  <strong>{selectedPrefab?.name}</strong>"?
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  color="danger"
+                  disabled={deleting}
+                  variant="light"
+                  onPress={onClose}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  color="primary"
+                  isLoading={deleting}
+                  onPress={confirmDelete}
+                >
+                  Confirm
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
   );
 }
