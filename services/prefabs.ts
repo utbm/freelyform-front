@@ -28,11 +28,18 @@ export async function createPrefab(
 }
 
 export async function updatePrefab(
-  identifier: string,
+  token: string | null,
+  prefabIdentifier: string,
   prefabRequest: PrefabRequest,
 ) {
+  if (!token) throw new Error("You should be logged in to update a prefab!");
   try {
-    return await axios.put(`${API_URL}/${identifier}`, prefabRequest);
+    await axios.patch(`${API_URL}/${prefabIdentifier}`, prefabRequest, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =

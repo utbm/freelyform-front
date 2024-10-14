@@ -95,7 +95,7 @@ export const PrivateNavbar = () => {
                   router.push("/prefabs");
                 }}
               >
-                My prefabs
+                My forms
               </DropdownItem>
               <DropdownItem key="logout" color="danger" onClick={logout}>
                 Log Out
