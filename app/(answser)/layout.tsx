@@ -6,9 +6,11 @@ import { Toaster } from "react-hot-toast";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
-import { Navbar } from "@/components/public/nav/navbar";
 
 import { Providers } from "../providers";
+import { AuthProvider } from "@/contexts/AuthContext";
+import AuthGuard from "@/components/AuthGuard";
+import GlobalNavbar from "@/components/global/navbar";
 
 export const metadata: Metadata = {
   title: {
@@ -43,14 +45,18 @@ export default function RootLayout({
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className="relative flex flex-col h-screen">
-            <Navbar />
-            <Toaster position="bottom-right" />
-            <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
-              {children}
-            </main>
-            <footer className="w-full flex items-center justify-center py-3" />
-          </div>
+          <AuthProvider>
+            <AuthGuard shouldRedirect={false}>
+              <div className="relative flex flex-col h-screen">
+                <GlobalNavbar />
+                <Toaster position="bottom-right" />
+                <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
+                  {children}
+                </main>
+                <footer className="w-full flex items-center justify-center py-3" />
+              </div>
+            </AuthGuard>
+          </AuthProvider>
         </Providers>
       </body>
     </html>

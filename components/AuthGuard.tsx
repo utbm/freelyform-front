@@ -7,15 +7,16 @@ import { Spinner } from "@nextui-org/spinner";
 
 import { isLoggedUser } from "@/services/authentication";
 import { getJwtToken } from "@/lib/utils";
-import AuthContext from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface AuthGuardProps {
   children: React.ReactNode;
+  shouldRedirect?: boolean; // Optional prop with default value
 }
 
-const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
+const AuthGuard: React.FC<AuthGuardProps> = ({ children, shouldRedirect = true }) => {
   const router = useRouter();
-  const [token, setToken] = useState<string>("");
+  const { token, setToken } = useAuth();
   const [authorized, setAuthorized] = useState<boolean>(false);
 
   useEffect(() => {
@@ -24,7 +25,12 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
       const retrievedToken = getJwtToken();
 
       if (!logged || !retrievedToken) {
-        router.replace("/login");
+        setToken(null); // Clear token if not authenticated
+        if (shouldRedirect) {
+          router.replace("/login");
+        } else {
+          setAuthorized(false);
+        }
       } else {
         setAuthorized(true);
         setToken(retrievedToken);
@@ -32,21 +38,23 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
     };
 
     checkAuth();
-  }, [router]);
+  }, [router, setToken, shouldRedirect]);
 
   if (!authorized) {
-    return (
-      <div className="w-full h-screen flex justify-center items-center">
-        <Spinner color="primary" size="lg" />
-      </div>
-    );
+    if (shouldRedirect) {
+      // Optionally, render a loading state while redirecting
+      return (
+        <div className="w-full h-screen flex justify-center items-center">
+          <Spinner color="primary" size="lg" />
+        </div>
+      );
+    } else {
+      // If not redirecting, render children regardless of authorization
+      return <>{children}</>;
+    }
   }
 
-  return (
-    <AuthContext.Provider value={{ token }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <>{children}</>;
 };
 
 export default AuthGuard;

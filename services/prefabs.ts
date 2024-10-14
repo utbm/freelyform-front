@@ -61,7 +61,7 @@ export async function getPrefabById(
   }
 }
 
-export async function getPrefabs(token: string) {
+export async function getPrefabs(token: string|null) {
   try {
     return await axios.get(`${API_URL}`, {
       headers: {
