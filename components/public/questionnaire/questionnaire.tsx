@@ -18,6 +18,7 @@ import { AnswerCheckbox } from "@/components/public/questionnaire/answer-checkbo
 import { AnswerRadio } from "@/components/public/questionnaire/answer-radio";
 import { getPrefabById } from "@/services/prefabs";
 import { throwConfettis } from "@/lib/utils";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Questionnaire({ params }: { params: { id: string } }) {
   // Initialize state variables with proper types
@@ -35,12 +36,13 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
   });
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const { token } = useAuth();
 
   // Fetch the form data when the component mounts
   useEffect(() => {
     async function fetchForm() {
       try {
-        const response = await getPrefabById(params.id);
+        const response = await getPrefabById(token, params.id);
 
         const fetchedForm = response.data as Form;
 
@@ -140,6 +142,7 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
 
   const validateInput = (): boolean => {
     if (!currentField) return false;
+    console.log(currentField)
     const value = answers[currentField.id];
     const validationRules: ValidationRule[] =
       currentField.validationRules || [];

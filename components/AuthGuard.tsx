@@ -1,3 +1,4 @@
+// components/AuthGuard.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -5,20 +6,35 @@ import { useRouter } from "next/navigation";
 import { Spinner } from "@nextui-org/spinner";
 
 import { isLoggedUser } from "@/services/authentication";
+import { getJwtToken } from "@/lib/utils";
+import AuthContext from "@/contexts/AuthContext";
 
-export default function AuthGuard({ children }: { children: React.ReactNode }) {
+interface AuthGuardProps {
+  children: React.ReactNode;
+}
+
+const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
   const router = useRouter();
-  const [authorized, setAuthorized] = useState(false);
+  const [token, setToken] = useState<string>("");
+  const [authorized, setAuthorized] = useState<boolean>(false);
 
   useEffect(() => {
-    const logged = isLoggedUser();
+    const checkAuth = async () => {
+      const logged = isLoggedUser();
+      const retrievedToken = getJwtToken();
 
-    if (!logged) router.replace("/login");
-    else setAuthorized(true);
+      if (!logged || !retrievedToken) {
+        router.replace("/login");
+      } else {
+        setAuthorized(true);
+        setToken(retrievedToken);
+      }
+    };
+
+    checkAuth();
   }, [router]);
 
   if (!authorized) {
-    // Optionally, render a loading state or nothing
     return (
       <div className="w-full h-screen flex justify-center items-center">
         <Spinner color="primary" size="lg" />
@@ -26,5 +42,11 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     );
   }
 
-  return <>{children}</>;
-}
+  return (
+    <AuthContext.Provider value={{ token }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export default AuthGuard;

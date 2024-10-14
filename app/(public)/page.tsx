@@ -30,8 +30,7 @@ export default function Home() {
         <br />
         <span className={title()}>quickly and effortlessly.</span>
         <div className={subtitle({ class: "mt-4" })}>
-          Design powerful forms with ease using our intuitive drag-and-drop
-          interface.
+          Design powerful forms with ease using our intuitive interface.
         </div>
       </div>
 

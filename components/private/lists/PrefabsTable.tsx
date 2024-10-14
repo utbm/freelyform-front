@@ -32,6 +32,7 @@ import {
 } from "@/components/icons";
 import { capitalize } from "@/lib/utils";
 import { getPrefabs } from "@/services/prefabs";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Define the interface for your form data
 interface Form {
@@ -55,11 +56,12 @@ export default function PrefabsTable() {
   const [prefabsData, setPrefabsData] = React.useState<Form[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<Error | null>(null);
+  const { token } = useAuth();
 
   React.useEffect(() => {
     async function fetchData() {
       try {
-        const response = await getPrefabs();
+        const response = await getPrefabs(token);
         // Ensure each form has a unique 'id'
         const dataWithIds = response.data.map((form: Form, index: number) => ({
           ...form,
