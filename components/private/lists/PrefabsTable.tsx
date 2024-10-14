@@ -30,6 +30,7 @@ import { FaPencil } from "react-icons/fa6";
 import { FaFileExcel, FaPlus, FaShare, FaTrash } from "react-icons/fa";
 import { Link } from "@nextui-org/link";
 import { toast } from "react-hot-toast"; // Import toast from react-hot-toast
+import { useRouter } from "next/navigation";
 
 import {
   ChevronDownIcon,
@@ -63,6 +64,7 @@ export default function PrefabsTable() {
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<Error | null>(null);
   const { token } = useAuth();
+  const router = useRouter();
 
   // State for deletion modal
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -182,6 +184,10 @@ export default function PrefabsTable() {
     onOpen();
   };
 
+  const handleEdit = (form: Form) => {
+    router.push(`/prefabs/edit/${form.id}`);
+  };
+
   // Function to confirm deletion
   const confirmDelete = async () => {
     if (!selectedPrefab) return;
@@ -245,7 +251,7 @@ export default function PrefabsTable() {
                       <span>Download answers</span>
                     </div>
                   </DropdownItem>
-                  <DropdownItem>
+                  <DropdownItem onClick={() => handleEdit(form)}>
                     <div className="w-full flex flex-row gap-4 items-center">
                       <FaPencil className="w-4" />
                       <span>Edit</span>

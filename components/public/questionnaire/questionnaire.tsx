@@ -20,6 +20,7 @@ import { getPrefabById } from "@/services/prefabs";
 import { throwConfettis } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { AnswerRequest } from "@/types/AnswerInterfaces";
+import { createAnswer } from "@/services/answers";
 
 export default function Questionnaire({ params }: { params: { id: string } }) {
   // Initialize state variables with proper types
@@ -70,7 +71,7 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
   );
 
   // Define handleNext and other functions
-  const handleNext = () => {
+  const handleNext = async () => {
     if (!currentField) return;
     const isMultipleChoice: boolean =
       currentField.type === InputType.MULTIPLE_CHOICE;
@@ -85,8 +86,19 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
         resetSelectionStates(); // Reset selection states when moving to the next question
       } else {
         // Log the results and complete the questionnaire
-        logResults();
+        const answerRequest: AnswerRequest = logResults();
+
         setIsCompleted(true);
+        try {
+          await createAnswer(token, answerRequest);
+          toast.success("Answers submitted successfully!");
+          setTimeout(() => {
+            router.push("/");
+          }, 5000);
+        } catch (error) {
+          // @ts-ignore
+          toast.error(error);
+        }
       }
     }
   };
@@ -313,17 +325,13 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
         })),
       };
     });
-
-    // console.log(result);
-    // cast result as AnswerRequest
-    const answerRequest : AnswerRequest = {
+    const answerRequest: AnswerRequest = {
       answers: result,
-    }
-    throwConfettis();
-    console.log(answerRequest);
+    };
 
-    return result;
-    // TODO : Implement a way to send the results to the server
+    throwConfettis();
+
+    return answerRequest;
   };
 
   // Function to get the column letter(s) for a given index
