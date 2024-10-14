@@ -221,7 +221,7 @@ export default function PrefabsTable() {
             </Chip>
           ));
 
-          return <span className="flex flex-row gap-2">{tags}</span>;
+          return <span className="flex flex-row gap-2 flex-wrap">{tags}</span>;
         }
         case "actions":
           return (
