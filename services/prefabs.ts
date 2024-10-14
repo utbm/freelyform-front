@@ -33,19 +33,33 @@ export async function updatePrefab(
 ) {
   try {
     return await axios.put(`${API_URL}/${identifier}`, prefabRequest);
-  } catch (error) {
+  } catch (error: any) {
+    // It's better to extract meaningful error messages if possible
+    const errorMessage =
+      error.response?.data?.message || error.message || "Unknown error";
+
     throw new Error(
-      "An error occurred while updating the prefab (" + error + ")",
+      `An error occurred while creating the prefab: ${errorMessage}`,
     );
   }
 }
 
-export async function deletePrefab(identifier: string) {
+export async function deletePrefab(token: string | null, identifier: string) {
+  if (!token) throw new Error("You should be logged in to delete a prefab!");
   try {
-    return await axios.delete(`${API_URL}/${identifier}`);
-  } catch (error) {
+    return await axios.delete(`${API_URL}/${identifier}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error: any) {
+    // It's better to extract meaningful error messages if possible
+    const errorMessage =
+      error.response?.data?.message || error.message || "Unknown error";
+
     throw new Error(
-      "An error occurred while deleting the prefab (" + error + ")",
+      `An error occurred while creating the prefab: ${errorMessage}`,
     );
   }
 }
@@ -69,9 +83,13 @@ export async function getPrefabById(
       : {};
 
     return await axios.get(url, config);
-  } catch (error) {
+  } catch (error: any) {
+    // It's better to extract meaningful error messages if possible
+    const errorMessage =
+      error.response?.data?.message || error.message || "Unknown error";
+
     throw new Error(
-      "An error occurred while getting the prefab by id (" + error + ")",
+      `An error occurred while creating the prefab: ${errorMessage}`,
     );
   }
 }
@@ -84,9 +102,13 @@ export async function getPrefabs(token: string | null) {
         "Content-Type": "application/json",
       },
     });
-  } catch (error) {
+  } catch (error: any) {
+    // It's better to extract meaningful error messages if possible
+    const errorMessage =
+      error.response?.data?.message || error.message || "Unknown error";
+
     throw new Error(
-      "An error occurred while getting the prefabs (" + error + ")",
+      `An error occurred while creating the prefab: ${errorMessage}`,
     );
   }
 }
