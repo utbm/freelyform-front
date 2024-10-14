@@ -4,7 +4,10 @@ import { PrefabRequest } from "@/types/PrefabInterfaces";
 
 const API_URL = process.env.NEXT_PUBLIC_BASE_API_URL + "/prefabs";
 
-export async function createPrefab(token: string | null, prefabRequest: PrefabRequest) {
+export async function createPrefab(
+  token: string | null,
+  prefabRequest: PrefabRequest,
+) {
   if (!token) throw new Error("You should be logged in to create a prefab!");
   try {
     await axios.post(`${API_URL}`, prefabRequest, {
@@ -15,20 +18,24 @@ export async function createPrefab(token: string | null, prefabRequest: PrefabRe
     });
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
-    const errorMessage = error.response?.data?.message || error.message || "Unknown error";
-    throw new Error(`An error occurred while creating the prefab: ${errorMessage}`);
+    const errorMessage =
+      error.response?.data?.message || error.message || "Unknown error";
+
+    throw new Error(
+      `An error occurred while creating the prefab: ${errorMessage}`,
+    );
   }
 }
 
 export async function updatePrefab(
   identifier: string,
-  prefabRequest: PrefabRequest
+  prefabRequest: PrefabRequest,
 ) {
   try {
     return await axios.put(`${API_URL}/${identifier}`, prefabRequest);
   } catch (error) {
     throw new Error(
-      "An error occurred while updating the prefab (" + error + ")"
+      "An error occurred while updating the prefab (" + error + ")",
     );
   }
 }
@@ -38,7 +45,7 @@ export async function deletePrefab(identifier: string) {
     return await axios.delete(`${API_URL}/${identifier}`);
   } catch (error) {
     throw new Error(
-      "An error occurred while deleting the prefab (" + error + ")"
+      "An error occurred while deleting the prefab (" + error + ")",
     );
   }
 }
@@ -46,38 +53,40 @@ export async function deletePrefab(identifier: string) {
 export async function getPrefabById(
   token: string | null,
   identifier: string,
-  withHiddenFields = false
+  withHiddenFields = false,
 ) {
   try {
     const url = `${API_URL}/${identifier}${withHiddenFields ? "?withHidden=true" : ""}`;
 
     // Set headers conditionally based on token presence
-    const config = token ? {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      }
-    } : {};
+    const config = token
+      ? {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      : {};
 
     return await axios.get(url, config);
   } catch (error) {
     throw new Error(
-      "An error occurred while getting the prefab by id (" + error + ")"
+      "An error occurred while getting the prefab by id (" + error + ")",
     );
   }
 }
 
-export async function getPrefabs(token: string|null) {
+export async function getPrefabs(token: string | null) {
   try {
     return await axios.get(`${API_URL}`, {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     });
   } catch (error) {
     throw new Error(
-      "An error occurred while getting the prefabs (" + error + ")"
+      "An error occurred while getting the prefabs (" + error + ")",
     );
   }
 }

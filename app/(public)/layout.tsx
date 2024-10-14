@@ -7,9 +7,9 @@ import { Toaster } from "react-hot-toast";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import NoAuthGuard from "@/components/NoAuthGuard";
+import GlobalNavbar from "@/components/global/navbar";
 
 import { Providers } from "../providers";
-import GlobalNavbar from "@/components/global/navbar";
 
 export const metadata: Metadata = {
   title: {

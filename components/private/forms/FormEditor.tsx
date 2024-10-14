@@ -63,26 +63,22 @@ const FormEditor: React.FC = () => {
   // Handle form submission
   const handleSubmit = async () => {
     try {
-      console.log("1");
       let tags = form.tags ?? [];
-      console.log("2");
+
       tags = tags.map((tag) => tag.trim());
-      console.log("3");
       const prefabRequest: PrefabRequest = {
         name: form.name,
         description: form.description,
         tags: tags,
         groups: form.groups,
       };
-      console.log("4");
 
       if (form.name.trim() === "") {
         toast.error("Form name is required");
+
         return;
       }
-      console.log("5", token, prefabRequest);
       await createPrefab(token, prefabRequest);
-      console.log("6");
       toast.success("Questionnaire created successfully!");
       router.push("/prefabs");
     } catch (error) {

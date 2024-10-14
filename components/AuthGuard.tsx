@@ -14,9 +14,13 @@ interface AuthGuardProps {
   shouldRedirect?: boolean; // Optional prop with default value
 }
 
-const AuthGuard: React.FC<AuthGuardProps> = ({ children, shouldRedirect = true }) => {
+const AuthGuard: React.FC<AuthGuardProps> = ({
+  children,
+  shouldRedirect = true,
+}) => {
   const router = useRouter();
-  const { token, setToken } = useAuth();
+  // @ts-ignore
+  const { setToken } = useAuth();
   const [authorized, setAuthorized] = useState<boolean>(false);
 
   useEffect(() => {

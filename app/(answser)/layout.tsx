@@ -6,11 +6,11 @@ import { Toaster } from "react-hot-toast";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
-
-import { Providers } from "../providers";
 import { AuthProvider } from "@/contexts/AuthContext";
 import AuthGuard from "@/components/AuthGuard";
 import GlobalNavbar from "@/components/global/navbar";
+
+import { Providers } from "../providers";
 
 export const metadata: Metadata = {
   title: {

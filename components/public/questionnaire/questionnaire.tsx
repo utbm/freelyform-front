@@ -142,7 +142,6 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
 
   const validateInput = (): boolean => {
     if (!currentField) return false;
-    console.log(currentField)
     const value = answers[currentField.id];
     const validationRules: ValidationRule[] =
       currentField.validationRules || [];
