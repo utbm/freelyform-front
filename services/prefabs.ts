@@ -4,13 +4,19 @@ import { PrefabRequest } from "@/types/PrefabInterfaces";
 
 const API_URL = process.env.NEXT_PUBLIC_BASE_API_URL + "/prefabs";
 
-export async function createPrefab(prefabRequest: PrefabRequest) {
+export async function createPrefab(token: string | null, prefabRequest: PrefabRequest) {
+  if (!token) throw new Error("You should be logged in to create a prefab!");
   try {
-    await axios.post(`${API_URL}`, prefabRequest);
-  } catch (error) {
-    throw new Error(
-      "An error occurred while creating the prefab (" + error + ")"
-    );
+    await axios.post(`${API_URL}`, prefabRequest, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error: any) {
+    // It's better to extract meaningful error messages if possible
+    const errorMessage = error.response?.data?.message || error.message || "Unknown error";
+    throw new Error(`An error occurred while creating the prefab: ${errorMessage}`);
   }
 }
 
@@ -49,7 +55,7 @@ export async function getPrefabById(
     const config = token ? {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       }
     } : {};
 

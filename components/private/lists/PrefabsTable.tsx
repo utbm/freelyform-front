@@ -178,11 +178,11 @@ export default function PrefabsTable() {
 
         return <span className="flex flex-row gap-2">{tags}</span>;
       }
-      case "groups":
-        return <span>{form.groups.length}</span>;
+      // case "groups":
+      //   return <span>{form.groups.length}</span>;
       case "actions":
         return (
-          <div className="relative flex justify-end items-center gap-2">
+          <div className="relative flex justify-center items-center gap-2">
             <Dropdown>
               <DropdownTrigger>
                 <Button isIconOnly size="sm" variant="light">
