@@ -21,6 +21,7 @@ import { throwConfettis } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { AnswerRequest } from "@/types/AnswerInterfaces";
 import { createAnswer } from "@/services/answers";
+import MapComponent from "@/components/public/questionnaire/map";
 
 export default function Questionnaire({ params }: { params: { id: string } }) {
   // Initialize state variables with proper types
@@ -103,12 +104,12 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
     }
   };
 
-  // Move the useEffect above the early return and ensure it always runs
+  // Updated useEffect to block Enter key when GEOLOCATION input is displayed
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
         e.preventDefault(); // Prevent default behavior
-        if (!loading) {
+        if (!loading && currentField?.type !== InputType.GEOLOCATION) {
           handleNext();
         }
       }
@@ -141,7 +142,7 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
   // Set the appropriate margin-top class
   const marginTopClass = isSmallInput ? "mt-24" : "mt-18";
 
-  const handleInputChange = (value: string | string[] | null) => {
+  const handleInputChange = (value: any) => {
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
       [currentField!.id]: value,
@@ -173,6 +174,8 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
             value === "" ||
             isNaN(Number(value))
           );
+        case InputType.GEOLOCATION:
+          return value === null || value === undefined;
         default:
           return value === null || value === undefined || value === "";
       }
@@ -480,8 +483,13 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
         );
       }
       case InputType.GEOLOCATION: {
-        // TODO - Implement geolocation input
-        return <div>Geolocation input not implemented yet.</div>;
+        return (
+          <div className="w-full my-4">
+            <div className="h-96">
+              <MapComponent onLocationChange={handleInputChange} />
+            </div>
+          </div>
+        );
       }
       default: {
         return <Input variant="bordered" {...commonProps} />;
@@ -526,7 +534,7 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
           <Spacer y={1} />
           {renderInputField()}
           <Spacer y={2} />
-          <div className="w-full flex flex-row justify-between">
+          <div className="w-full flex flex-row justify-between mt-4">
             {/* Conditionally render the Back button */}
             {currentQuestionIndex > 0 && (
               <Button
