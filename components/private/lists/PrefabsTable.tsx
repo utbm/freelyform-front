@@ -27,7 +27,7 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { FaPencil } from "react-icons/fa6";
-import { FaFileExcel, FaPlus, FaShare, FaTrash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaFileExcel, FaPlus, FaShare, FaTrash } from "react-icons/fa";
 import { Link } from "@nextui-org/link";
 import { toast } from "react-hot-toast"; // Import toast from react-hot-toast
 import { useRouter } from "next/navigation";
@@ -38,7 +38,7 @@ import {
   VerticalDotsIcon,
 } from "@/components/icons";
 import { capitalize } from "@/lib/utils";
-import { getPrefabs, deletePrefab } from "@/services/prefabs"; // Import deletePrefab
+import { getPrefabs, deletePrefab, changePrefabStatus } from "@/services/prefabs"; // Import deletePrefab
 import { useAuth } from "@/contexts/AuthContext";
 
 // Define the interface for your form data
@@ -47,6 +47,7 @@ interface Form {
   name: string;
   description: string;
   tags?: string[];
+  isActive: boolean;
   groups: any[]; // Replace 'any' with the appropriate type if known
   [key: string]: any; // For dynamic property access
 }
@@ -55,7 +56,7 @@ const headerColumns = [
   { uid: "title", name: "Title" },
   { uid: "description", name: "Description" },
   { uid: "tags", name: "Tags" },
-  { uid: "groups", name: "Number of question groups" },
+  { uid: "isActive", name: "Status" },
   { uid: "actions", name: "Actions" },
 ];
 
@@ -188,6 +189,19 @@ export default function PrefabsTable() {
     router.push(`/prefabs/edit/${form.id}`);
   };
 
+  const changeStatus = async (form: Form) => {
+    try {
+      await changePrefabStatus(token, form.id, !form.isActive); // Toggle status
+      toast.success(
+        `Form is now ${form.isActive ? "disabled" : "enabled"}!`,
+      );
+      // Re-fetch the prefabs data
+      await fetchData();
+    } catch (error: any) {
+      toast.error("Failed to update status.");
+    }
+  };
+
   // Function to confirm deletion
   const confirmDelete = async () => {
     if (!selectedPrefab) return;
@@ -229,6 +243,15 @@ export default function PrefabsTable() {
 
           return <span className="flex flex-row gap-2 flex-wrap">{tags}</span>;
         }
+        case "isActive":
+          return (
+            <Chip
+              color={form.isActive ? "success" : "danger"}
+              size="sm"
+            >
+              {form.isActive ? "Active" : "Inactive"}
+            </Chip>
+          );
         case "actions":
           return (
             <div className="relative flex justify-center items-center gap-2">
@@ -255,6 +278,12 @@ export default function PrefabsTable() {
                     <div className="w-full flex flex-row gap-4 items-center">
                       <FaPencil className="w-4" />
                       <span>Edit</span>
+                    </div>
+                  </DropdownItem>
+                  <DropdownItem onClick={() => changeStatus(form)}>
+                    <div className="w-full flex flex-row gap-4 items-center">
+                      { form.isActive ? (<FaEyeSlash className="w-4" />) : (<FaEye className="w-4" />) }
+                      <span>{ form.isActive ? "Disable" : "Enable" }</span>
                     </div>
                   </DropdownItem>
                   <DropdownItem onClick={() => handleDelete(form)}>

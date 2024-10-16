@@ -51,6 +51,32 @@ export async function updatePrefab(
   }
 }
 
+export async function changePrefabStatus(
+  token: string | null,
+  prefabIdentifier: string,
+  toState: boolean
+) {
+  if (!token) throw new Error("You should be logged in to change the status of a prefab!");
+  try {
+    await axios.patch(`${API_URL}/${prefabIdentifier}/activation`, {
+      active: toState
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error: any) {
+    // It's better to extract meaningful error messages if possible
+    const errorMessage =
+      error.response?.data?.message || error.message || "Unknown error";
+
+    throw new Error(
+      `An error occurred while updating the prefab : ${errorMessage}`,
+    );
+  }
+}
+
 export async function deletePrefab(token: string | null, identifier: string) {
   if (!token) throw new Error("You should be logged in to delete a prefab!");
   try {
