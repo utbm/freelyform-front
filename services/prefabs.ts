@@ -54,18 +54,25 @@ export async function updatePrefab(
 export async function changePrefabStatus(
   token: string | null,
   prefabIdentifier: string,
-  toState: boolean
+  toState: boolean,
 ) {
-  if (!token) throw new Error("You should be logged in to change the status of a prefab!");
+  if (!token)
+    throw new Error(
+      "You should be logged in to change the status of a prefab!",
+    );
   try {
-    await axios.patch(`${API_URL}/${prefabIdentifier}/activation`, {
-      active: toState
-    }, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+    await axios.patch(
+      `${API_URL}/${prefabIdentifier}/activation`,
+      {
+        active: toState,
       },
-    });
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      },
+    );
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =

@@ -27,7 +27,14 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { FaPencil } from "react-icons/fa6";
-import { FaEye, FaEyeSlash, FaFileExcel, FaPlus, FaShare, FaTrash } from "react-icons/fa";
+import {
+  FaEye,
+  FaEyeSlash,
+  FaFileExcel,
+  FaPlus,
+  FaShare,
+  FaTrash,
+} from "react-icons/fa";
 import { Link } from "@nextui-org/link";
 import { toast } from "react-hot-toast"; // Import toast from react-hot-toast
 import { useRouter } from "next/navigation";
@@ -38,7 +45,11 @@ import {
   VerticalDotsIcon,
 } from "@/components/icons";
 import { capitalize } from "@/lib/utils";
-import { getPrefabs, deletePrefab, changePrefabStatus } from "@/services/prefabs"; // Import deletePrefab
+import {
+  getPrefabs,
+  deletePrefab,
+  changePrefabStatus,
+} from "@/services/prefabs"; // Import deletePrefab
 import { useAuth } from "@/contexts/AuthContext";
 
 // Define the interface for your form data
@@ -192,9 +203,7 @@ export default function PrefabsTable() {
   const changeStatus = async (form: Form) => {
     try {
       await changePrefabStatus(token, form.id, !form.isActive); // Toggle status
-      toast.success(
-        `Form is now ${form.isActive ? "disabled" : "enabled"}!`,
-      );
+      toast.success(`Form is now ${form.isActive ? "disabled" : "enabled"}!`);
       // Re-fetch the prefabs data
       await fetchData();
     } catch (error: any) {
@@ -245,10 +254,7 @@ export default function PrefabsTable() {
         }
         case "isActive":
           return (
-            <Chip
-              color={form.isActive ? "success" : "danger"}
-              size="sm"
-            >
+            <Chip color={form.isActive ? "success" : "danger"} size="sm">
               {form.isActive ? "Active" : "Inactive"}
             </Chip>
           );
@@ -282,8 +288,12 @@ export default function PrefabsTable() {
                   </DropdownItem>
                   <DropdownItem onClick={() => changeStatus(form)}>
                     <div className="w-full flex flex-row gap-4 items-center">
-                      { form.isActive ? (<FaEyeSlash className="w-4" />) : (<FaEye className="w-4" />) }
-                      <span>{ form.isActive ? "Disable" : "Enable" }</span>
+                      {form.isActive ? (
+                        <FaEyeSlash className="w-4" />
+                      ) : (
+                        <FaEye className="w-4" />
+                      )}
+                      <span>{form.isActive ? "Disable" : "Enable"}</span>
                     </div>
                   </DropdownItem>
                   <DropdownItem onClick={() => handleDelete(form)}>
