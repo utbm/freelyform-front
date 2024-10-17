@@ -161,6 +161,22 @@ export function getJwtTokenData() {
   return JSON.parse(decodedPayload);
 }
 
+export function getUserRoles() {
+  const jwtTokenData = getJwtTokenData();
+
+  if (!jwtTokenData) return [];
+  // const roles = jwtTokenData.roles;
+  const roles = ["ADMIN", "USER"];
+
+  return roles;
+}
+
+export function hasRole(role: string) {
+  const roles = getUserRoles();
+
+  return roles.includes(role);
+}
+
 export function throwConfettis() {
   let count = 200;
   let defaults = {
