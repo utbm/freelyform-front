@@ -24,16 +24,13 @@ interface ValidationRulesEditorProps {
 }
 
 const ValidationRulesEditor: React.FC<ValidationRulesEditorProps> = ({
-  validationRules,
-  onUpdateValidationRules,
-  inputType,
-}) => {
-  const [localRules, setLocalRules] =
-    useState<ValidationRule[]>(validationRules); // Local state for validation rules
+                                                                       validationRules,
+                                                                       onUpdateValidationRules,
+                                                                       inputType,
+                                                                     }) => {
+  const [localRules, setLocalRules] = useState<ValidationRule[]>(validationRules); // Local state for validation rules
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const [multipleChoiceType, setMultipleChoiceType] = useState<string | null>(
-    null,
-  ); // State for dropdown selection
+  const [multipleChoiceType, setMultipleChoiceType] = useState<string | null>(null); // State for dropdown selection
   const [errors, setErrors] = useState<{
     [key in ValidationRuleType]?: string;
   }>({}); // State for validation errors
@@ -44,23 +41,50 @@ const ValidationRulesEditor: React.FC<ValidationRulesEditorProps> = ({
   }, [validationRules]);
 
   useEffect(() => {
-    // Reset multipleChoiceType when inputType changes
-    const radioRule = localRules.find(
-      (rule) => rule.type === ValidationRuleType.IS_RADIO,
-    );
-    const multipleChoiceRule = localRules.find(
-      (rule) => rule.type === ValidationRuleType.IS_MULTIPLE_CHOICE,
-    );
-
-    if (radioRule) {
-      setMultipleChoiceType("is_radio");
-    } else if (multipleChoiceRule) {
-      setMultipleChoiceType("is_multiple_choice");
-    } else {
-      setMultipleChoiceType(null); // Reset the dropdown selection
-    }
     setIsPopoverOpen(false); // Close the popover when the input type changes
-  }, [inputType]); // Removed localRules from dependencies
+
+    setLocalRules((prevLocalRules) => {
+      let updatedRules = [...prevLocalRules];
+
+      if (inputType === InputType.MULTIPLE_CHOICE) {
+        // Check if IS_RADIO or IS_MULTIPLE_CHOICE rules exist
+        const radioRule = updatedRules.find(
+          (rule) => rule.type === ValidationRuleType.IS_RADIO,
+        );
+        const multipleChoiceRule = updatedRules.find(
+          (rule) => rule.type === ValidationRuleType.IS_MULTIPLE_CHOICE,
+        );
+
+        if (radioRule) {
+          setMultipleChoiceType("is_radio");
+        } else if (multipleChoiceRule) {
+          setMultipleChoiceType("is_multiple_choice");
+        } else {
+          // Neither rule exists, default to IS_RADIO
+          setMultipleChoiceType("is_radio");
+
+          // Add IS_RADIO to updatedRules
+          updatedRules = [...updatedRules, { type: ValidationRuleType.IS_RADIO }];
+          onUpdateValidationRules(updatedRules);
+        }
+      } else {
+        setMultipleChoiceType(null);
+
+        // Remove IS_RADIO and IS_MULTIPLE_CHOICE from updatedRules
+        const newRules = updatedRules.filter(
+          (rule) =>
+            rule.type !== ValidationRuleType.IS_RADIO &&
+            rule.type !== ValidationRuleType.IS_MULTIPLE_CHOICE,
+        );
+        if (newRules.length !== updatedRules.length) {
+          updatedRules = newRules;
+          onUpdateValidationRules(updatedRules);
+        }
+      }
+
+      return updatedRules;
+    });
+  }, [inputType]);
 
   const handleMultipleChoiceTypeChange = (type: string) => {
     let updatedRules = [...localRules];
@@ -70,14 +94,22 @@ const ValidationRulesEditor: React.FC<ValidationRulesEditorProps> = ({
       updatedRules = updatedRules.filter(
         (rule) => rule.type !== ValidationRuleType.IS_MULTIPLE_CHOICE,
       );
-      updatedRules.push({ type: ValidationRuleType.IS_RADIO });
+      if (!updatedRules.some((rule) => rule.type === ValidationRuleType.IS_RADIO)) {
+        updatedRules.push({ type: ValidationRuleType.IS_RADIO });
+      }
       setMultipleChoiceType("is_radio");
     } else if (type === "is_multiple_choice") {
       // Remove 'is_radio' if it exists and add 'is_multiple_choice'
       updatedRules = updatedRules.filter(
         (rule) => rule.type !== ValidationRuleType.IS_RADIO,
       );
-      updatedRules.push({ type: ValidationRuleType.IS_MULTIPLE_CHOICE });
+      if (
+        !updatedRules.some(
+          (rule) => rule.type === ValidationRuleType.IS_MULTIPLE_CHOICE,
+        )
+      ) {
+        updatedRules.push({ type: ValidationRuleType.IS_MULTIPLE_CHOICE });
+      }
       setMultipleChoiceType("is_multiple_choice");
     }
     setLocalRules(updatedRules);
@@ -211,7 +243,7 @@ const ValidationRulesEditor: React.FC<ValidationRulesEditorProps> = ({
                   selectedKeys={
                     multipleChoiceType
                       ? new Set([multipleChoiceType])
-                      : undefined
+                      : new Set(["is_radio"])
                   }
                   size="md"
                   onSelectionChange={(keys) =>
@@ -258,10 +290,10 @@ const ValidationRulesEditor: React.FC<ValidationRulesEditorProps> = ({
                   </div>
                   {/* Display input fields for applicable rules */}
                   {(type === ValidationRuleType.MAX_LENGTH ||
-                    type === ValidationRuleType.MIN_LENGTH ||
-                    type === ValidationRuleType.MAX_VALUE ||
-                    type === ValidationRuleType.MIN_VALUE ||
-                    type === ValidationRuleType.REGEX_MATCH) &&
+                      type === ValidationRuleType.MIN_LENGTH ||
+                      type === ValidationRuleType.MAX_VALUE ||
+                      type === ValidationRuleType.MIN_VALUE ||
+                      type === ValidationRuleType.REGEX_MATCH) &&
                     localRules.some((rule) => rule.type === type) && (
                       <div className="mt-2">
                         <Input
