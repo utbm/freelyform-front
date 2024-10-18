@@ -6,6 +6,7 @@ export interface Form {
   name: string;
   description: string;
   tags?: string[];
+  isActive: boolean;
   groups: FormGroup[];
 }
 
