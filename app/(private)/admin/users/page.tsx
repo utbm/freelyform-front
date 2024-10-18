@@ -88,7 +88,7 @@ export default function Page() {
   const handleToggle = async (
     userId: string,
     roleKey: keyof User["roles"],
-    checked: boolean,
+    isSelected: boolean,
   ) => {
     setLoading(true);
     const updatedUsers = users.map((user) => {
@@ -97,7 +97,7 @@ export default function Page() {
           ...user,
           roles: {
             ...user.roles,
-            [roleKey]: checked,
+            [roleKey]: isSelected,
           },
         };
       }
@@ -134,8 +134,9 @@ export default function Page() {
     <div className="container mx-auto p-6">
       {/* Title and Search Bar in the Same Line */}
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Users permission</h1>
+        <h1 className="text-2xl font-bold">Admin Users Management</h1>
         <Input
+          isClearable
           className="w-[20vw]"
           placeholder="Search by name or email"
           value={searchQuery}
@@ -155,28 +156,24 @@ export default function Page() {
             <TableColumn className="text-center">Is Admin</TableColumn>
             <TableColumn className="text-center">Can Create Prefab</TableColumn>
           </TableHeader>
-          <TableBody>
+          <TableBody emptyContent={"No users found."}>
             {filteredUsers.map((user) => (
               <TableRow key={user.id}>
                 <TableCell>{`${user.firstName} ${user.lastName}`}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell className="text-center">
                   <Switch
-                    checked={user.roles.IS_ADMIN}
-                    onChange={(e) =>
-                      handleToggle(user.id, "IS_ADMIN", e.target.checked)
+                    isSelected={user.roles.IS_ADMIN}
+                    onValueChange={(isSelected) =>
+                      handleToggle(user.id, "IS_ADMIN", isSelected)
                     }
                   />
                 </TableCell>
                 <TableCell className="text-center">
                   <Switch
-                    checked={user.roles.CAN_CREATE_PREFAB}
-                    onChange={(e) =>
-                      handleToggle(
-                        user.id,
-                        "CAN_CREATE_PREFAB",
-                        e.target.checked,
-                      )
+                    isSelected={user.roles.CAN_CREATE_PREFAB}
+                    onValueChange={(isSelected) =>
+                      handleToggle(user.id, "CAN_CREATE_PREFAB", isSelected)
                     }
                   />
                 </TableCell>
