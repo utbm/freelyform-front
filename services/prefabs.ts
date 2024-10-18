@@ -1,8 +1,5 @@
-import axios from "axios";
-
 import { PrefabRequest } from "@/types/PrefabInterfaces";
-
-const API_URL = process.env.NEXT_PUBLIC_BASE_API_URL + "/prefabs";
+import client from "@/services/client";
 
 export async function createPrefab(
   token: string | null,
@@ -10,7 +7,7 @@ export async function createPrefab(
 ) {
   if (!token) throw new Error("You should be logged in to create a prefab!");
   try {
-    await axios.post(`${API_URL}`, prefabRequest, {
+    await client.post("/prefabs", prefabRequest, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -34,7 +31,7 @@ export async function updatePrefab(
 ) {
   if (!token) throw new Error("You should be logged in to update a prefab!");
   try {
-    await axios.patch(`${API_URL}/${prefabIdentifier}`, prefabRequest, {
+    await client.patch(`/prefabs/${prefabIdentifier}`, prefabRequest, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -61,8 +58,8 @@ export async function changePrefabStatus(
       "You should be logged in to change the status of a prefab!",
     );
   try {
-    await axios.patch(
-      `${API_URL}/${prefabIdentifier}/activation`,
+    await client.patch(
+      `/prefabs/${prefabIdentifier}/activation`,
       {
         active: toState,
       },
@@ -87,7 +84,7 @@ export async function changePrefabStatus(
 export async function deletePrefab(token: string | null, identifier: string) {
   if (!token) throw new Error("You should be logged in to delete a prefab!");
   try {
-    return await axios.delete(`${API_URL}/${identifier}`, {
+    return await client.delete(`/prefabs/${identifier}`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -110,7 +107,7 @@ export async function getPrefabById(
   withHiddenFields = false,
 ) {
   try {
-    const url = `${API_URL}/${identifier}${withHiddenFields ? "?withHidden=true" : ""}`;
+    const url = `/prefabs/${identifier}${withHiddenFields ? "?withHidden=true" : ""}`;
 
     // Set headers conditionally based on token presence
     const config = token
@@ -122,7 +119,7 @@ export async function getPrefabById(
         }
       : {};
 
-    return await axios.get(url, config);
+    return await client.get(url, config);
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =
@@ -136,7 +133,7 @@ export async function getPrefabById(
 
 export async function getPrefabs(token: string | null) {
   try {
-    return await axios.get(`${API_URL}`, {
+    return await client.get(`/prefabs`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
