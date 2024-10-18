@@ -52,6 +52,7 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
         if (!fetchedForm.isActive) {
           setRedirecting(true); // Set redirecting to true
           router.push("/");
+
           return; // Return early to prevent further execution
         }
 

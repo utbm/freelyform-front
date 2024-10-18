@@ -21,6 +21,7 @@ const FormEditor: React.FC = () => {
     name: "",
     description: "",
     tags: [],
+    isActive: true,
     groups: [],
   });
 

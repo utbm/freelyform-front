@@ -32,6 +32,7 @@ const EditFormPage: React.FC = () => {
           name: data.name,
           description: data.description,
           tags: data.tags,
+          isActive: true,
           groups: data.groups, // Ensure groups are in FormGroup[] format
         };
 
