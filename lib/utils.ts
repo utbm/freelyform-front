@@ -129,7 +129,7 @@ export function isExpiredJwtToken() {
   return true;
 }
 
-export function getJwtToken() {
+export function getJwtToken(): string | null {
   if (isExpiredJwtToken()) {
     removeJwtToken();
 
