@@ -6,6 +6,7 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
+    "build-start": "next build && next start",
     "lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix",
     "docker:build": "docker-compose -f docker-compose.prod.yml up --build",
     "docker:dev": "docker-compose -f docker-compose.dev.yml up --build",

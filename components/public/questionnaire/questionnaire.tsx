@@ -38,25 +38,32 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
   });
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const [redirecting, setRedirecting] = useState<boolean>(false); // New state variable
 
   // Fetch the form data when the component mounts
   useEffect(() => {
     async function fetchForm() {
       try {
         const response = await getPrefabById(params.id);
-
         const fetchedForm = response.data as Form;
+
+        if (!fetchedForm.isActive) {
+          setRedirecting(true); // Set redirecting to true
+          router.push("/");
+
+          return; // Return early to prevent further execution
+        }
 
         setForm(fetchedForm);
         // Initialize fields after fetching the form
         setFields(
           fetchedForm.groups.flatMap((group: FormGroup) => group.fields),
         );
+        setLoading(false); // Set loading to false only when form is active
       } catch (error) {
         toast.error("An error occurred while fetching the form (not found)");
         router.push("/prefabs");
-      } finally {
-        setLoading(false);
+        setLoading(false); // Set loading to false in case of error
       }
     }
     fetchForm();
@@ -122,6 +129,10 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
   }, [currentQuestionIndex, answers, loading, currentField]);
 
   // Handle loading state
+  if (redirecting) {
+    return null; // Do not render anything if redirecting
+  }
+
   if (loading || !form || !currentField) {
     return (
       <div className="flex justify-center items-center mt-48">

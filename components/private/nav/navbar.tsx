@@ -24,10 +24,12 @@ import { GithubIcon, Logo } from "@/components/icons";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { getLoggedUser, logoutUser } from "@/services/authentication";
 import { User } from "@/types/AuthenticationInterfaces";
+import { hasRole } from "@/lib/utils";
 
 export const PrivateNavbar = () => {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const disabledMenuKeys = hasRole("ADMIN") ? [] : ["users"];
 
   const logout = async () => {
     await logoutUser();
@@ -84,10 +86,22 @@ export const PrivateNavbar = () => {
                 src="https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250"
               />
             </DropdownTrigger>
-            <DropdownMenu aria-label="Profile Actions" variant="flat">
+            <DropdownMenu
+              aria-label="Profile Actions"
+              disabledKeys={disabledMenuKeys}
+              variant="flat"
+            >
               <DropdownItem key="profile" className="h-14 gap-2">
                 <p className="font-semibold">Signed in as</p>
                 <p className="font-semibold">{user.sub}</p>
+              </DropdownItem>
+              <DropdownItem
+                key="users"
+                onClick={() => {
+                  router.push("/admin/users");
+                }}
+              >
+                Manage users
               </DropdownItem>
               <DropdownItem
                 key="prefabs"
