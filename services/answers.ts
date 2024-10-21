@@ -1,9 +1,6 @@
 import { AnswerRequest } from "@/types/AnswerInterfaces";
 
-export async function createAnswer(
-  token: string | null,
-  answerRequest: AnswerRequest
-) {
+export async function createAnswer(answerRequest: AnswerRequest) {
   try {
     // Set headers conditionally based on token presence
     // const config = token
@@ -16,9 +13,7 @@ export async function createAnswer(
     //   : {};
     // await client.post("/answers", answerRequest, config);
     return (
-      "Answer created successfully with token: " +
-      token +
-      " and request: " +
+      "Answer created successfully with request: " +
       JSON.stringify(answerRequest) +
       "on URL: /answers"
     );
@@ -28,7 +23,7 @@ export async function createAnswer(
       error.response?.data?.message || error.message || "Unknown error";
 
     throw new Error(
-      `An error occurred while creating the prefab answer: ${errorMessage}`
+      `An error occurred while creating the prefab answer: ${errorMessage}`,
     );
   }
 }

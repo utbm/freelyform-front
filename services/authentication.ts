@@ -14,7 +14,7 @@ import client from "@/services/client";
 
 export async function registerUser(registerUser: RegisterUserRequest) {
   try {
-    return client.post("/auth/register", registerUser)
+    return client.post("/auth/register", registerUser);
   } catch (error) {
     throw new Error(
       "An error occurred on the application while registering the user",

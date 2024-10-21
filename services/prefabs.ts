@@ -1,18 +1,9 @@
 import { PrefabRequest } from "@/types/PrefabInterfaces";
 import client from "@/services/client";
 
-export async function createPrefab(
-  token: string | null,
-  prefabRequest: PrefabRequest,
-) {
-  if (!token) throw new Error("You should be logged in to create a prefab!");
+export async function createPrefab(prefabRequest: PrefabRequest) {
   try {
-    await client.post("/prefabs", prefabRequest, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    await client.post("/prefabs", prefabRequest);
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =
@@ -25,18 +16,11 @@ export async function createPrefab(
 }
 
 export async function updatePrefab(
-  token: string | null,
   prefabIdentifier: string,
   prefabRequest: PrefabRequest,
 ) {
-  if (!token) throw new Error("You should be logged in to update a prefab!");
   try {
-    await client.patch(`/prefabs/${prefabIdentifier}`, prefabRequest, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    await client.patch(`/prefabs/${prefabIdentifier}`, prefabRequest);
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =
@@ -49,27 +33,13 @@ export async function updatePrefab(
 }
 
 export async function changePrefabStatus(
-  token: string | null,
   prefabIdentifier: string,
   toState: boolean,
 ) {
-  if (!token)
-    throw new Error(
-      "You should be logged in to change the status of a prefab!",
-    );
   try {
-    await client.patch(
-      `/prefabs/${prefabIdentifier}/activation`,
-      {
-        active: toState,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      },
-    );
+    await client.patch(`/prefabs/${prefabIdentifier}/activation`, {
+      active: toState,
+    });
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =
@@ -81,15 +51,9 @@ export async function changePrefabStatus(
   }
 }
 
-export async function deletePrefab(token: string | null, identifier: string) {
-  if (!token) throw new Error("You should be logged in to delete a prefab!");
+export async function deletePrefab(identifier: string) {
   try {
-    return await client.delete(`/prefabs/${identifier}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    return await client.delete(`/prefabs/${identifier}`);
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =
@@ -102,24 +66,15 @@ export async function deletePrefab(token: string | null, identifier: string) {
 }
 
 export async function getPrefabById(
-  token: string | null,
   identifier: string,
   withHiddenFields = false,
 ) {
   try {
-    const url = `/prefabs/${identifier}${withHiddenFields ? "?withHidden=true" : ""}`;
-
-    // Set headers conditionally based on token presence
-    const config = token
-      ? {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      : {};
-
-    return await client.get(url, config);
+    return await client.get(`/prefabs/${identifier}`, {
+      params: {
+        withHidden: withHiddenFields,
+      },
+    });
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =
@@ -131,14 +86,9 @@ export async function getPrefabById(
   }
 }
 
-export async function getPrefabs(token: string | null) {
+export async function getPrefabs() {
   try {
-    return await client.get(`/prefabs`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    return await client.get(`/prefabs`);
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =
