@@ -1,21 +1,19 @@
 "use client";
 
-import { getAnswersByPrefabId } from "@/services/answers";
 import { useEffect } from "react";
-import { getPrefabById } from "@/services/prefabs";
-import { Form, FormGroup } from "@/types/FormTypes";
 import toast from "react-hot-toast";
-import { useAuth } from "@/contexts/AuthContext";
+
+import { getAnswersByPrefabId } from "@/services/answers";
+import { Answers } from "@/types/AnswerInterfaces";
 
 export default function Page({ params }: { params: { id: string } }) {
-  const { token } = useAuth();
-
-
   useEffect(() => {
     async function fetchForm() {
       try {
-        const response = await getAnswersByPrefabId(token, params.id);
-        console.log(response.data);
+        const response = await getAnswersByPrefabId(params.id);
+        const fetchedAnswers = response.data as Answers;
+
+        return fetchedAnswers;
       } catch (error) {
         toast.error("An error occurred while fetching the answers");
       }
@@ -23,7 +21,5 @@ export default function Page({ params }: { params: { id: string } }) {
     fetchForm();
   }, [params.id]);
 
-  return (<div>
-    { params.id }
-  </div>)
+  return <div>{params.id}</div>;
 }

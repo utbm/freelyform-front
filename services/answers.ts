@@ -1,54 +1,36 @@
-import { AnswerRequest } from "@/types/AnswerInterfaces";
 import axios from "axios";
+
+import { AnswerRequest } from "@/types/AnswerInterfaces";
 
 const API_URL = process.env.NEXT_PUBLIC_BASE_API_URL + "/answers";
 
 export async function createAnswer(
-  token: string | null,
   prefabId: string,
-  answerRequest: AnswerRequest
+  answerRequest: AnswerRequest,
 ) {
   try {
-    // Set headers conditionally based on token presence
-    const config = token
-      ? {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
-      }
-      : {};
-    await axios.post(`${API_URL}/${prefabId}`, answerRequest, config);
+    await axios.post(`${API_URL}/${prefabId}`, answerRequest);
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =
       error.response?.data?.message || error.message || "Unknown error";
 
     throw new Error(
-      `An error occurred while creating the prefab answer: ${errorMessage}`
+      `An error occurred while creating the prefab answer: ${errorMessage}`,
     );
   }
 }
 
-export async function getAnswersByPrefabId(token: string | null, prefabId: string) {
+export async function getAnswersByPrefabId(prefabId: string) {
   try {
-    // Set headers conditionally based on token presence
-    const config = token
-      ? {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
-      }
-      : {};
-    return await axios.get(`${API_URL}/${prefabId}`, config);
+    return await axios.get(`${API_URL}/${prefabId}`);
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =
       error.response?.data?.message || error.message || "Unknown error";
 
     throw new Error(
-      `An error occurred while creating the prefab answer: ${errorMessage}`
+      `An error occurred while creating the prefab answer: ${errorMessage}`,
     );
   }
 }

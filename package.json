@@ -10,7 +10,8 @@
     "lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix",
     "docker:build": "docker-compose -f docker-compose.prod.yml up --build",
     "docker:dev": "docker-compose -f docker-compose.dev.yml up --build",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "production": "next lint && next build && next start"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
