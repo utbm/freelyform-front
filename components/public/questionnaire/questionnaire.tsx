@@ -18,7 +18,6 @@ import { AnswerCheckbox } from "@/components/public/questionnaire/answer-checkbo
 import { AnswerRadio } from "@/components/public/questionnaire/answer-radio";
 import { getPrefabById } from "@/services/prefabs";
 import { throwConfettis } from "@/lib/utils";
-import { useAuth } from "@/contexts/AuthContext";
 import { AnswerRequest } from "@/types/AnswerInterfaces";
 import { createAnswer } from "@/services/answers";
 import MapComponent from "@/components/public/questionnaire/map";
@@ -39,13 +38,12 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
   });
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const { token } = useAuth();
 
   // Fetch the form data when the component mounts
   useEffect(() => {
     async function fetchForm() {
       try {
-        const response = await getPrefabById(token, params.id);
+        const response = await getPrefabById(params.id);
 
         const fetchedForm = response.data as Form;
 
@@ -91,7 +89,7 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
 
         setIsCompleted(true);
         try {
-          await createAnswer(token, answerRequest);
+          await createAnswer(answerRequest);
           toast.success("Answers submitted successfully!");
           setTimeout(() => {
             router.push("/");

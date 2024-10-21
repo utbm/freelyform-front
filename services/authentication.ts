@@ -1,5 +1,3 @@
-import axios from "axios";
-
 import {
   getJwtToken,
   getJwtTokenData,
@@ -12,12 +10,11 @@ import {
   RegisterUserRequest,
   User,
 } from "@/types/AuthenticationInterfaces";
-
-const API_URL = process.env.NEXT_PUBLIC_BASE_API_URL + "/auth";
+import client from "@/services/client";
 
 export async function registerUser(registerUser: RegisterUserRequest) {
   try {
-    return await axios.post(`${API_URL}/register`, registerUser);
+    return client.post("/auth/register", registerUser);
   } catch (error) {
     throw new Error(
       "An error occurred on the application while registering the user",
@@ -27,7 +24,7 @@ export async function registerUser(registerUser: RegisterUserRequest) {
 
 export async function loginUser(loginUser: LoginUserRequest) {
   try {
-    const response = await axios.post(`${API_URL}/login`, loginUser);
+    const response = await client.post(`/auth/login`, loginUser);
     const jwtToken = response.data.token;
 
     if (!jwtToken) throw new Error("Invalid token received from the server");

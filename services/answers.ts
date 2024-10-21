@@ -1,11 +1,6 @@
 import { AnswerRequest } from "@/types/AnswerInterfaces";
 
-const API_URL = process.env.NEXT_PUBLIC_BASE_API_URL + "/answers";
-
-export async function createAnswer(
-  token: string | null,
-  answerRequest: AnswerRequest,
-) {
+export async function createAnswer(answerRequest: AnswerRequest) {
   try {
     // Set headers conditionally based on token presence
     // const config = token
@@ -16,14 +11,11 @@ export async function createAnswer(
     //     },
     //   }
     //   : {};
-    // await axios.post(API_URL, answerRequest, config);
+    // await client.post("/answers", answerRequest, config);
     return (
-      "Answer created successfully with token: " +
-      token +
-      " and request: " +
+      "Answer created successfully with request: " +
       JSON.stringify(answerRequest) +
-      "on URL: " +
-      API_URL
+      "on URL: /answers"
     );
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible

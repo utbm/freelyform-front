@@ -11,11 +11,9 @@ import GroupEditor from "@/components/private/forms/GroupEditor";
 import { generateUniqueId } from "@/lib/utils";
 import { createPrefab } from "@/services/prefabs";
 import { PrefabRequest } from "@/types/PrefabInterfaces";
-import { useAuth } from "@/contexts/AuthContext";
 
 const FormEditor: React.FC = () => {
   const router = useRouter();
-  const { token } = useAuth();
 
   const [form, setForm] = useState<Form>({
     name: "",
@@ -78,7 +76,7 @@ const FormEditor: React.FC = () => {
 
         return;
       }
-      await createPrefab(token, prefabRequest);
+      await createPrefab(prefabRequest);
       toast.success("Questionnaire created successfully!");
       router.push("/prefabs");
     } catch (error) {
