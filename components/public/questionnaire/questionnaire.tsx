@@ -98,7 +98,7 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
 
         setIsCompleted(true);
         try {
-          await createAnswer(token, answerRequest);
+          await createAnswer(token, params.id, answerRequest);
           toast.success("Answers submitted successfully!");
           setTimeout(() => {
             router.push("/");
