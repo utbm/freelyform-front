@@ -1,11 +1,12 @@
-import { AnswerRequest } from "@/types/AnswerInterfaces";
 import axios from "axios";
+
+import { AnswerRequest } from "@/types/AnswerInterfaces";
 
 const API_URL = process.env.NEXT_PUBLIC_BASE_API_URL + "/answers";
 
 export async function createAnswer(
   prefabId: string,
-  answerRequest: AnswerRequest
+  answerRequest: AnswerRequest,
 ) {
   try {
     await axios.post(`${API_URL}/${prefabId}`, answerRequest);
@@ -15,7 +16,7 @@ export async function createAnswer(
       error.response?.data?.message || error.message || "Unknown error";
 
     throw new Error(
-      `An error occurred while creating the prefab answer: ${errorMessage}`
+      `An error occurred while creating the prefab answer: ${errorMessage}`,
     );
   }
 }
@@ -29,7 +30,7 @@ export async function getAnswersByPrefabId(prefabId: string) {
       error.response?.data?.message || error.message || "Unknown error";
 
     throw new Error(
-      `An error occurred while creating the prefab answer: ${errorMessage}`
+      `An error occurred while creating the prefab answer: ${errorMessage}`,
     );
   }
 }
