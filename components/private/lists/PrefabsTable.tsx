@@ -88,7 +88,7 @@ export default function PrefabsTable() {
     setLoading(true);
     setError(null);
     try {
-      const response = await getPrefabs(token);
+      const response = await getPrefabs();
       // Ensure each form has a unique 'id'
       const dataWithIds = response.data.map((form: Form, index: number) => ({
         ...form,
@@ -202,7 +202,7 @@ export default function PrefabsTable() {
 
   const changeStatus = async (form: Form) => {
     try {
-      await changePrefabStatus(token, form.id, !form.isActive); // Toggle status
+      await changePrefabStatus(form.id, !form.isActive); // Toggle status
       toast.success(`Form is now ${form.isActive ? "disabled" : "enabled"}!`);
       // Re-fetch the prefabs data
       await fetchData();
@@ -217,7 +217,7 @@ export default function PrefabsTable() {
 
     setDeleting(true);
     try {
-      await deletePrefab(token, selectedPrefab.id); // Assuming deletePrefab is implemented
+      await deletePrefab(selectedPrefab.id); // Assuming deletePrefab is implemented
 
       toast.success(`Prefab "${selectedPrefab.name}" deleted successfully!`);
 

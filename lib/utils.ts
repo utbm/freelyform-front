@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 import confetti from "canvas-confetti";
 
 import { InputType, ValidationRuleType } from "@/types/FormEnums";
+import { type JwtToken } from "@/contexts/AuthContext";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -129,7 +130,7 @@ export function isExpiredJwtToken() {
   return true;
 }
 
-export function getJwtToken() {
+export function getJwtToken(): JwtToken | null {
   if (isExpiredJwtToken()) {
     removeJwtToken();
 

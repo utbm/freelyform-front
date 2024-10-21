@@ -3,9 +3,11 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 // Define the shape of the AuthContext
+export type JwtToken = string;
+
 interface AuthContextType {
-  token: string | null;
-  setToken: (token: string | null) => void;
+  token: JwtToken | null;
+  setToken: (token: JwtToken | null) => void;
 }
 
 // Create the AuthContext with default values
@@ -21,7 +23,7 @@ export const useAuth = (): AuthContextType => useContext(AuthContext);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<JwtToken | null>(null);
 
   return (
     <AuthContext.Provider value={{ token, setToken }}>

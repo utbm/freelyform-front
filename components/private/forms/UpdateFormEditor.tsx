@@ -11,7 +11,6 @@ import { Form, FormGroup } from "@/types/FormTypes";
 import GroupEditor from "@/components/private/forms/GroupEditor";
 import { generateUniqueId } from "@/lib/utils";
 import { PrefabRequest } from "@/types/PrefabInterfaces";
-import { useAuth } from "@/contexts/AuthContext";
 import { updatePrefab } from "@/services/prefabs";
 
 interface UpdateFormEditorProps {
@@ -24,7 +23,6 @@ const UpdateFormEditor: React.FC<UpdateFormEditorProps> = ({
   id,
 }) => {
   const router = useRouter();
-  const { token } = useAuth();
 
   const [form, setForm] = useState<Form>(initialForm);
 
@@ -83,7 +81,7 @@ const UpdateFormEditor: React.FC<UpdateFormEditorProps> = ({
 
         return;
       }
-      await updatePrefab(token, id, prefabRequest);
+      await updatePrefab(id, prefabRequest);
       toast.success("Prefab updated successfully!");
       router.push("/prefabs");
     } catch (error: any) {
