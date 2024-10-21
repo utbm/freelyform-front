@@ -14,7 +14,7 @@ export default function Page({ params }: { params: { id: string } }) {
   useEffect(() => {
     async function fetchForm() {
       try {
-        const response = await getAnswersByPrefabId(token, params.id);
+        const response = await getAnswersByPrefabId(params.id);
         console.log(response.data);
       } catch (error) {
         toast.error("An error occurred while fetching the answers");
