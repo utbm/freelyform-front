@@ -274,6 +274,12 @@ export default function PrefabsTable() {
                       <span>Answer link</span>
                     </div>
                   </DropdownItem>
+                  <DropdownItem onClick={() => router.push(`/prefabs/${form.id}`)}>
+                    <div className="w-full flex flex-row gap-4 items-center">
+                      <FaEye className="w-4" />
+                      <span>See answers</span>
+                    </div>
+                  </DropdownItem>
                   <DropdownItem>
                     <div className="w-full flex flex-row gap-4 items-center">
                       <FaFileExcel className="w-4" />
