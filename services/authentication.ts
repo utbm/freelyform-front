@@ -15,9 +15,13 @@ import client from "@/services/client";
 export async function registerUser(registerUser: RegisterUserRequest) {
   try {
     return client.post("/auth/register", registerUser);
-  } catch (error) {
+  } catch (error: any) {
+    // It's better to extract meaningful error messages if possible
+    const errorMessage =
+      error.response?.data?.technicalMessage || error.response?.data?.message || error.message || "Unknown error";
+
     throw new Error(
-      "An error occurred on the application while registering the user",
+      `An error occurred while registering the user: ${errorMessage}`,
     );
   }
 }
@@ -29,11 +33,13 @@ export async function loginUser(loginUser: LoginUserRequest) {
 
     if (!jwtToken) throw new Error("Invalid token received from the server");
     storeJwtToken(jwtToken);
-  } catch (error) {
+  } catch (error: any) {
+    // It's better to extract meaningful error messages if possible
+    const errorMessage =
+      error.response?.data?.technicalMessage || error.response?.data?.message || error.message || "Unknown error";
+
     throw new Error(
-      "An error occurred on the application while logging in the user (" +
-        error +
-        ")",
+      `An error occurred while logging in the user: ${errorMessage}`,
     );
   }
 }
@@ -49,7 +55,7 @@ export function isLoggedUser() {
 export async function getLoggedUser(): Promise<User> {
   try {
     return getJwtTokenData();
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(
       "An error occurred on the application while getting the logged user",
     );

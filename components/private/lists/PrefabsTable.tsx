@@ -44,7 +44,7 @@ import {
   SearchIcon,
   VerticalDotsIcon,
 } from "@/components/icons";
-import { capitalize } from "@/lib/utils";
+import { capitalize, hasRole } from "@/lib/utils";
 import {
   getPrefabs,
   deletePrefab,
@@ -267,14 +267,16 @@ export default function PrefabsTable() {
                     <VerticalDotsIcon className="text-default-300" />
                   </Button>
                 </DropdownTrigger>
-                <DropdownMenu>
+                <DropdownMenu disabledKeys={ hasRole("CAN_CREATE_FORM") ? [] : ["edit"]}>
                   <DropdownItem onClick={() => handleCopyLink(form.id)}>
                     <div className="w-full flex flex-row gap-4 items-center">
                       <FaShare className="w-4" />
                       <span>Answer link</span>
                     </div>
                   </DropdownItem>
-                  <DropdownItem onClick={() => router.push(`/prefabs/${form.id}`)}>
+                  <DropdownItem
+                    onClick={() => router.push(`/prefabs/${form.id}`)}
+                  >
                     <div className="w-full flex flex-row gap-4 items-center">
                       <FaEye className="w-4" />
                       <span>See answers</span>
@@ -286,7 +288,7 @@ export default function PrefabsTable() {
                       <span>Download answers</span>
                     </div>
                   </DropdownItem>
-                  <DropdownItem onClick={() => handleEdit(form)}>
+                  <DropdownItem key="edit" onClick={() => handleEdit(form)}>
                     <div className="w-full flex flex-row gap-4 items-center">
                       <FaPencil className="w-4" />
                       <span>Edit</span>
@@ -394,14 +396,18 @@ export default function PrefabsTable() {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button
-              as={Link}
-              color="primary"
-              endContent={<FaPlus />}
-              href="/prefabs/create"
-            >
-              Add New
-            </Button>
+            {hasRole("CAN_CREATE_FORM") ? (
+              <Button
+                as={Link}
+                color="primary"
+                endContent={<FaPlus />}
+                href="/prefabs/create"
+              >
+                Add New
+              </Button>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
         <div className="flex justify-between items-center">

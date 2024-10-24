@@ -3,8 +3,15 @@ export interface User {
   firstName: string;
   lastName: string;
   email: string;
-  roles: {
-    IS_ADMIN: boolean;
-    CAN_CREATE_PREFAB: boolean;
-  };
+  roles: UserRoles[];
+}
+
+export enum UserRoles {
+  ADMIN = "ADMIN",
+  USER = "USER",
+  CAN_CREATE_FORM = "CAN_CREATE_FORM",
+}
+
+export interface UserRolesRequest {
+  roles: UserRoles[];
 }
