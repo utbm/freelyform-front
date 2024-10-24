@@ -267,7 +267,9 @@ export default function PrefabsTable() {
                     <VerticalDotsIcon className="text-default-300" />
                   </Button>
                 </DropdownTrigger>
-                <DropdownMenu disabledKeys={ hasRole("CAN_CREATE_FORM") ? [] : ["edit"]}>
+                <DropdownMenu
+                  disabledKeys={hasRole("CAN_CREATE_FORM") ? [] : ["edit"]}
+                >
                   <DropdownItem onClick={() => handleCopyLink(form.id)}>
                     <div className="w-full flex flex-row gap-4 items-center">
                       <FaShare className="w-4" />

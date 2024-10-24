@@ -26,8 +26,8 @@ import {
 } from "@nextui-org/react";
 import { toast } from "react-hot-toast"; // Import toast from react-hot-toast
 import { FaTrash } from "react-icons/fa"; // Import trash icon
-import { VerticalDotsIcon } from "@/components/icons"; // Ensure this icon exists
 
+import { VerticalDotsIcon } from "@/components/icons"; // Ensure this icon exists
 import { User, UserRoles } from "@/types/UserInterfaces";
 import { getUsers, updateUserRoles, deleteUser } from "@/services/users"; // Import deleteUser
 
@@ -48,6 +48,7 @@ export default function UsersTable() {
     if (isInitialLoad) setLoading(true);
     try {
       const fetchedUsers = await getUsers();
+
       setUsers(fetchedUsers);
     } catch (error: any) {
       toast.error(`Failed to fetch users: ${error.message}`);
@@ -64,14 +65,16 @@ export default function UsersTable() {
   const handleToggle = async (
     userId: string,
     role: UserRoles,
-    isSelected: boolean
+    isSelected: boolean,
   ) => {
     setUpdatingUserId(userId);
 
     // Find the user to update
     const userIndex = users.findIndex((user) => user.id === userId);
+
     if (userIndex === -1) {
       setUpdatingUserId(null);
+
       return;
     }
 
@@ -90,6 +93,7 @@ export default function UsersTable() {
 
     // Optimistically update the UI
     const updatedUsers = [...users];
+
     updatedUsers[userIndex] = { ...user, roles: updatedRoles };
     setUsers(updatedUsers);
 
@@ -129,7 +133,7 @@ export default function UsersTable() {
     try {
       await deleteUser(selectedUser.id); // Call the deleteUser service
       toast.success(
-        `User "${selectedUser.firstName} ${selectedUser.lastName}" deleted successfully!`
+        `User "${selectedUser.firstName} ${selectedUser.lastName}" deleted successfully!`,
       );
       // Refresh users data to ensure consistency without showing the spinner
       await fetchUsers(false);
@@ -138,6 +142,7 @@ export default function UsersTable() {
     } finally {
       setDeleting(false);
       setSelectedUser(null);
+      // @ts-ignore
       onOpenChange(false); // Close the modal
     }
   };
@@ -205,7 +210,7 @@ export default function UsersTable() {
           return user[columnKey as keyof User];
       }
     },
-    [handleToggle, updatingUserId]
+    [handleToggle, updatingUserId],
   );
 
   if (loading) {
@@ -293,6 +298,7 @@ export default function UsersTable() {
               color="danger"
               disabled={deleting}
               variant="light"
+              // @ts-ignore
               onPress={() => onOpenChange(false)}
             >
               Cancel

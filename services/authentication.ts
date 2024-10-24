@@ -18,7 +18,10 @@ export async function registerUser(registerUser: RegisterUserRequest) {
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =
-      error.response?.data?.technicalMessage || error.response?.data?.message || error.message || "Unknown error";
+      error.response?.data?.technicalMessage ||
+      error.response?.data?.message ||
+      error.message ||
+      "Unknown error";
 
     throw new Error(
       `An error occurred while registering the user: ${errorMessage}`,
@@ -36,7 +39,10 @@ export async function loginUser(loginUser: LoginUserRequest) {
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =
-      error.response?.data?.technicalMessage || error.response?.data?.message || error.message || "Unknown error";
+      error.response?.data?.technicalMessage ||
+      error.response?.data?.message ||
+      error.message ||
+      "Unknown error";
 
     throw new Error(
       `An error occurred while logging in the user: ${errorMessage}`,

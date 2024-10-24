@@ -12,7 +12,10 @@ export async function createAnswer(
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =
-      error.response?.data?.technicalMessage || error.response?.data?.message || error.message || "Unknown error";
+      error.response?.data?.technicalMessage ||
+      error.response?.data?.message ||
+      error.message ||
+      "Unknown error";
 
     throw new Error(
       `An error occurred while creating the prefab answer: ${errorMessage}`,
