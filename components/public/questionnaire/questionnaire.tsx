@@ -22,6 +22,13 @@ import { AnswerRequest } from "@/types/AnswerInterfaces";
 import { createAnswer } from "@/services/answers";
 import MapComponent from "@/components/public/questionnaire/map";
 
+/**
+ * Questionnaire component.
+ * This component display all the components to answer to a prefab
+ * Contains all types of inputs, validation rules, etc ...
+ *
+ * @param {params} : { params: { id: string } This contains the id of the prefab to answer to
+ */
 export default function Questionnaire({ params }: { params: { id: string } }) {
   // Initialize state variables with proper types
   const router = useRouter();
