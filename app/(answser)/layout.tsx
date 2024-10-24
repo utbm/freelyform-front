@@ -1,5 +1,4 @@
 import "@/styles/globals.css";
-import "leaflet/dist/leaflet.css";
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
 import React from "react";

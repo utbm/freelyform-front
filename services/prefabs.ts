@@ -7,7 +7,10 @@ export async function createPrefab(prefabRequest: PrefabRequest) {
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =
-      error.response?.data?.message || error.message || "Unknown error";
+      error.response?.data?.technicalMessage ||
+      error.response?.data?.message ||
+      error.message ||
+      "Unknown error";
 
     throw new Error(
       `An error occurred while creating the prefab: ${errorMessage}`,
@@ -24,10 +27,13 @@ export async function updatePrefab(
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =
-      error.response?.data?.message || error.message || "Unknown error";
+      error.response?.data?.technicalMessage ||
+      error.response?.data?.message ||
+      error.message ||
+      "Unknown error";
 
     throw new Error(
-      `An error occurred while creating the prefab: ${errorMessage}`,
+      `An error occurred while updating the prefab: ${errorMessage}`,
     );
   }
 }
@@ -43,10 +49,13 @@ export async function changePrefabStatus(
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =
-      error.response?.data?.message || error.message || "Unknown error";
+      error.response?.data?.technicalMessage ||
+      error.response?.data?.message ||
+      error.message ||
+      "Unknown error";
 
     throw new Error(
-      `An error occurred while updating the prefab : ${errorMessage}`,
+      `An error occurred while updating the prefab status: ${errorMessage}`,
     );
   }
 }
@@ -57,10 +66,13 @@ export async function deletePrefab(identifier: string) {
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =
-      error.response?.data?.message || error.message || "Unknown error";
+      error.response?.data?.technicalMessage ||
+      error.response?.data?.message ||
+      error.message ||
+      "Unknown error";
 
     throw new Error(
-      `An error occurred while creating the prefab: ${errorMessage}`,
+      `An error occurred while deleting the prefab: ${errorMessage}`,
     );
   }
 }
@@ -78,10 +90,13 @@ export async function getPrefabById(
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =
-      error.response?.data?.message || error.message || "Unknown error";
+      error.response?.data?.technicalMessage ||
+      error.response?.data?.message ||
+      error.message ||
+      "Unknown error";
 
     throw new Error(
-      `An error occurred while creating the prefab: ${errorMessage}`,
+      `An error occurred while getting the prefab: ${errorMessage}`,
     );
   }
 }
@@ -92,10 +107,13 @@ export async function getPrefabs() {
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =
-      error.response?.data?.message || error.message || "Unknown error";
+      error.response?.data?.technicalMessage ||
+      error.response?.data?.message ||
+      error.message ||
+      "Unknown error";
 
     throw new Error(
-      `An error occurred while creating the prefab: ${errorMessage}`,
+      `An error occurred while getting the prefabs: ${errorMessage}`,
     );
   }
 }

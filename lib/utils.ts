@@ -166,14 +166,18 @@ export function getUserRoles() {
   const jwtTokenData = getJwtTokenData();
 
   if (!jwtTokenData) return [];
-  // const roles = jwtTokenData.roles;
-  const roles = ["ADMIN", "USER"];
+  let roles = jwtTokenData.role ?? "USER";
+
+  // Trim and split roles by ","
+  roles = roles.split(",").map((role: string) => role.trim());
 
   return roles;
 }
 
 export function hasRole(role: string) {
   const roles = getUserRoles();
+
+  if (roles.includes("ADMIN")) return true;
 
   return roles.includes(role);
 }
