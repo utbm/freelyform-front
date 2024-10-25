@@ -67,3 +67,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+.leaflet-control-geocoder-form > input {
+  color: black;
+}

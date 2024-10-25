@@ -12,6 +12,11 @@ import {
 } from "@/types/AuthenticationInterfaces";
 import client from "@/services/client";
 
+/**
+ * This function registers a new user by making a POST request to the API.
+ * It accepts the user registration details as a parameter.
+ * If an error occurs, it extracts a meaningful error message if possible and throws a new error with the message.
+ */
 export async function registerUser(registerUser: RegisterUserRequest) {
   try {
     return client.post("/auth/register", registerUser);
@@ -29,6 +34,12 @@ export async function registerUser(registerUser: RegisterUserRequest) {
   }
 }
 
+/**
+ * This function logs in a user by making a POST request to the API.
+ * It accepts the user login details as a parameter.
+ * Upon successful login, it stores the JWT token.
+ * If an error occurs, it extracts a meaningful error message if possible and throws a new error with the message.
+ */
 export async function loginUser(loginUser: LoginUserRequest) {
   try {
     const response = await client.post(`/auth/login`, loginUser);
@@ -50,14 +61,25 @@ export async function loginUser(loginUser: LoginUserRequest) {
   }
 }
 
+/**
+ * This function logs out the current user by removing the JWT token from storage.
+ */
 export async function logoutUser() {
   removeJwtToken();
 }
 
+/**
+ * This function checks if the current user is logged in by validating the stored JWT token.
+ * It returns `true` if the token is valid and not expired, otherwise `false`.
+ */
 export function isLoggedUser() {
   return !isExpiredJwtToken() && !!getJwtToken();
 }
 
+/**
+ * This function retrieves the logged-in user’s data by decoding the stored JWT token.
+ * If there's an error, it throws a new error with a generic message.
+ */
 export async function getLoggedUser(): Promise<User> {
   try {
     return getJwtTokenData();

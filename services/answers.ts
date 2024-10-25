@@ -3,6 +3,11 @@ import { AnswerGeolocation, AnswerRequest } from "@/types/AnswerInterfaces";
 
 const API_URL = process.env.NEXT_PUBLIC_BASE_API_URL + "/answers";
 
+/**
+ * This function creates an answer for a given prefab by making a POST request to the API.
+ * It accepts the ID of the prefab and the answer request object as parameters.
+ * If there's an error, it extracts a meaningful error message if possible and throws a new error with the message.
+ */
 export async function createAnswer(
   prefabId: string,
   answerRequest: AnswerRequest,
@@ -23,6 +28,12 @@ export async function createAnswer(
   }
 }
 
+/**
+ * This function fetches the answers associated with a specific prefab ID by making a GET request to the API.
+ * It optionally accepts a geolocation object, which can be used to filter results based on location.
+ * If there's a geolocation, it adds latitude, longitude, and distance to the query parameters.
+ * If an error occurs, it extracts a meaningful error message if possible and throws a new error with the message.
+ */
 export async function getAnswersByPrefabId(
   prefabId: string,
   geolocation?: AnswerGeolocation | null,

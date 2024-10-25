@@ -5,10 +5,17 @@ import confetti from "canvas-confetti";
 import { InputType, ValidationRuleType } from "@/types/FormEnums";
 import { type JwtToken } from "@/contexts/AuthContext";
 
+/**
+ * This function merges multiple class values using clsx and Tailwind Merge.
+ */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/**
+ * This function returns the display name for a given input type.
+ * It maps input types to human-readable names like "Text", "Number", etc.
+ */
 export function getInputTypeDisplay(type: InputType) {
   switch (type) {
     case InputType.TEXT:
@@ -26,6 +33,10 @@ export function getInputTypeDisplay(type: InputType) {
   }
 }
 
+/**
+ * This function returns an icon representation for a given input type.
+ * It maps input types to icons like "A" for text, "#" for number, etc.
+ */
 export function getInputTypeIcon(type: InputType) {
   switch (type) {
     case InputType.TEXT:
@@ -43,6 +54,10 @@ export function getInputTypeIcon(type: InputType) {
   }
 }
 
+/**
+ * This function returns the display name for a validation rule type.
+ * It maps validation rule types to human-readable descriptions.
+ */
 export function getInputValidationRuleDisplay(type: ValidationRuleType) {
   switch (type) {
     case ValidationRuleType.IS_EMAIL:
@@ -62,8 +77,9 @@ export function getInputValidationRuleDisplay(type: ValidationRuleType) {
   }
 }
 
-// utils.ts or similar utility file
-
+/**
+ * This function returns the available validation rules for a specific input type.
+ */
 export const getAvailableValidationRules = (
   inputType: InputType,
 ): ValidationRuleType[] => {
@@ -87,14 +103,23 @@ export const getAvailableValidationRules = (
   }
 };
 
+/**
+ * This function capitalizes the first letter of a string.
+ */
 export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+/**
+ * This function generates a unique ID string.
+ */
 export function generateUniqueId() {
   return Math.random().toString(36).substr(2, 9);
 }
 
+/**
+ * This function stores a JWT token in local storage, ensuring it's valid.
+ */
 export function storeJwtToken(jwtToken: string) {
   const isValidJwt = /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]*$/.test(
     jwtToken,
@@ -114,6 +139,9 @@ export function storeJwtToken(jwtToken: string) {
   return false;
 }
 
+/**
+ * This function checks if the stored JWT token has expired.
+ */
 export function isExpiredJwtToken() {
   if (typeof localStorage !== "undefined") {
     const expiresAt = localStorage.getItem("session_expiration");
@@ -130,6 +158,10 @@ export function isExpiredJwtToken() {
   return true;
 }
 
+/**
+ * This function retrieves the JWT token from local storage.
+ * If the token is expired, it returns null.
+ */
 export function getJwtToken(): JwtToken | null {
   if (isExpiredJwtToken()) {
     removeJwtToken();
@@ -143,13 +175,18 @@ export function getJwtToken(): JwtToken | null {
   return null;
 }
 
+/**
+ * This function removes the JWT token from local storage.
+ */
 export function removeJwtToken() {
   if (typeof localStorage !== "undefined") {
     localStorage.removeItem("session");
     localStorage.removeItem("session_expiration");
   }
 }
-
+/**
+ * This function retrieves the decoded data from the JWT token.
+ */
 export function getJwtTokenData() {
   const jwtToken = getJwtToken();
 
@@ -162,6 +199,9 @@ export function getJwtTokenData() {
   return JSON.parse(decodedPayload);
 }
 
+/**
+ * This function retrieves the user roles from the JWT token data.
+ */
 export function getUserRoles() {
   const jwtTokenData = getJwtTokenData();
 
@@ -173,7 +213,9 @@ export function getUserRoles() {
 
   return roles;
 }
-
+/**
+ * This function checks if the user has a specific role.
+ */
 export function hasRole(role: string) {
   const roles = getUserRoles();
 
@@ -182,6 +224,9 @@ export function hasRole(role: string) {
   return roles.includes(role);
 }
 
+/**
+ * This function triggers a confetti animation using the canvas-confetti library.
+ */
 export function throwConfettis() {
   let count = 200;
   let defaults = {

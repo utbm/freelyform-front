@@ -1,5 +1,6 @@
 // types/FormEnums.ts
 
+// Interface used to represent an input type in a prefab
 export enum InputType {
   TEXT = "text",
   NUMBER = "number",
@@ -8,6 +9,7 @@ export enum InputType {
   GEOLOCATION = "geolocation",
 }
 
+// Interface used to represent a validation rule type for a input in a prefab
 export enum ValidationRuleType {
   IS_EMAIL = "is_email",
   IS_RADIO = "is_radio",
