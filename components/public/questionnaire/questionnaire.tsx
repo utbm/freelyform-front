@@ -342,7 +342,11 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
           question: field.label,
           // If the field is optional and no answer is provided, set answer to null
           answer:
-            field.optional && (answers[field.id] === undefined || answers[field.id] === "" || (Array.isArray(answers[field.id]) && answers[field.id].length === 0))
+            field.optional &&
+            (answers[field.id] === undefined ||
+              answers[field.id] === "" ||
+              (Array.isArray(answers[field.id]) &&
+                answers[field.id].length === 0))
               ? null
               : answers[field.id] || "No answer",
         })),
