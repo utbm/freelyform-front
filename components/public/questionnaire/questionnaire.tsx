@@ -24,7 +24,7 @@ import MapComponent from "@/components/public/questionnaire/map";
 
 /**
  * Questionnaire component.
- * This component display all the components to answer to a prefab
+ * This component displays all the components to answer a prefab
  * Contains all types of inputs, validation rules, etc ...
  *
  * @param {params} : { params: { id: string } This contains the id of the prefab to answer to
@@ -333,14 +333,18 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
     }
   };
 
-  // Function to log results in the format of the prefab
+  // Updated logResults function
   const logResults = () => {
     let result = form!.groups.map((group: FormGroup) => {
       return {
         group: group.name,
         questions: group.fields.map((field: FormField) => ({
           question: field.label,
-          answer: answers[field.id] || "No answer",
+          // If the field is optional and no answer is provided, set answer to null
+          answer:
+            field.optional && (answers[field.id] === undefined || answers[field.id] === "" || (Array.isArray(answers[field.id]) && answers[field.id].length === 0))
+              ? null
+              : answers[field.id] || "No answer",
         })),
       };
     });
