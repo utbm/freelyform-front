@@ -229,7 +229,7 @@ export default function AnswersTable({ params }: { params: { id: string } }) {
                 size="sm"
                 variant="light"
                 onClick={() => {
-                  router.push(`/answers/view/${answer.id}`);
+                  router.push(`/prefabs/${params.id}/answers/${answer.id}`);
                 }}
               >
                 <FaEye className="w-4" />

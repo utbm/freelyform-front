@@ -1,5 +1,9 @@
 import client from "@/services/client";
-import { AnswerGeolocation, AnswerRequest } from "@/types/AnswerInterfaces";
+import {
+  Answer,
+  AnswerGeolocation,
+  AnswerRequest,
+} from "@/types/AnswerInterfaces";
 
 const API_URL = process.env.NEXT_PUBLIC_BASE_API_URL + "/answers";
 
@@ -54,6 +58,21 @@ export async function getAnswersByPrefabId(
 
     throw new Error(
       `An error occurred while fetching the prefab answers: ${errorMessage}`,
+    );
+  }
+}
+
+export async function getAnswerById(prefabId: string, answerId: string) {
+  try {
+    const response = await client.get(`${API_URL}/${prefabId}/${answerId}`);
+
+    return response.data as Answer;
+  } catch (error: any) {
+    const errorMessage =
+      error.response?.data?.message || error.message || "Unknown error";
+
+    throw new Error(
+      `An error occurred while fetching the prefab answer: ${errorMessage}`,
     );
   }
 }

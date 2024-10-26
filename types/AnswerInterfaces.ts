@@ -1,6 +1,8 @@
 // types/AnswerInterfaces.ts
 
 // Interface used to cast result of a questionnaire to the API Service
+import { InputType } from "@/types/FormEnums";
+
 export interface AnswerRequest {
   answers: object[];
 }
@@ -25,5 +27,16 @@ export interface AnswerUser {
 export interface AnswerGeolocation {
   lat: number;
   lng: number;
-  distance: number;
+  distance?: number;
+}
+
+export interface AnswerGroup {
+  group: string;
+  questions: AnswerQuestion[];
+}
+
+export interface AnswerQuestion {
+  question: string;
+  type: InputType;
+  answer: string | string[] | AnswerGeolocation;
 }
