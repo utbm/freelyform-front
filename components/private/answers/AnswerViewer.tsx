@@ -45,6 +45,7 @@ const AnswerViewer: React.FC<AnswerViewerProps> = ({ prefabId, answerId }) => {
 
         // Flatten the questions from all groups
         const allQuestions: FlattenedQuestion[] = fetchedAnswer.answers.flatMap(
+          // @ts-ignore
           (group: AnswerGroup) =>
             group.questions.map((question: AnswerQuestion) => ({
               group: group.group,
@@ -246,21 +247,21 @@ function renderReadOnlyField(question: AnswerQuestion) {
         );
       }
 
-    case InputType.GEOLOCATION:
+    case InputType.GEOLOCATION: {
       const { lat, lng } = question.answer as { lat: number; lng: number };
 
       return (
         <div className="w-full my-4">
           <div className="h-96">
             <MapComponent
-              readOnly
-              onLocationChange={() => {}}
               // @ts-ignore
               initialPosition={{ lat, lng }}
+              onLocationChange={() => {}}
             />
           </div>
         </div>
       );
+    }
 
     default:
       return (

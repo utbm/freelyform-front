@@ -44,7 +44,7 @@ import {
   SearchIcon,
   VerticalDotsIcon,
 } from "@/components/icons";
-import { capitalize, hasRole } from "@/lib/utils";
+import { capitalize, generateUniqueId, hasRole } from "@/lib/utils";
 import {
   getPrefabs,
   deletePrefab,
@@ -245,7 +245,7 @@ export default function PrefabsTable() {
           return <span>{form.description}</span>;
         case "tags": {
           const tags = form.tags?.map((tag: string) => (
-            <Chip key={tag} color="default" size="sm">
+            <Chip key={tag + generateUniqueId()} color="default" size="sm">
               {tag}
             </Chip>
           ));
