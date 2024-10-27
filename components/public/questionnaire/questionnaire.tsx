@@ -51,9 +51,8 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
   useEffect(() => {
     async function fetchForm() {
       try {
-        const response = await getPrefabById(params.id, true);
+        const response = await getPrefabById(params.id);
         const fetchedForm = response.data as Form;
-        console.log(fetchedForm);
 
         if (!fetchedForm.isActive || fetchedForm.isAlreadyAnswered) {
           setRedirecting(true); // Set redirecting to true
