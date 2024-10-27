@@ -8,6 +8,7 @@ export interface Form {
   description: string;
   tags?: string[];
   isActive: boolean;
+  isAlreadyAnswered: boolean;
   groups: FormGroup[];
 }
 
