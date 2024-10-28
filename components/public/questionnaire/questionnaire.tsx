@@ -54,7 +54,7 @@ export default function Questionnaire({ params }: { params: { id: string } }) {
         const response = await getPrefabById(params.id);
         const fetchedForm = response.data as Form;
 
-        if (!fetchedForm.isActive) {
+        if (!fetchedForm.isActive || fetchedForm.isAlreadyAnswered) {
           setRedirecting(true); // Set redirecting to true
           router.push("/");
 

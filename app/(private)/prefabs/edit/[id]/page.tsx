@@ -24,7 +24,7 @@ const EditFormPage: React.FC = () => {
     const fetchPrefab = async () => {
       try {
         if (!id) throw new Error("No prefab ID provided.");
-        const response = await getPrefabById(id.toString());
+        const response = await getPrefabById(id.toString(), true);
         const data = response.data;
 
         // Transform PrefabRequest to Form type if necessary
