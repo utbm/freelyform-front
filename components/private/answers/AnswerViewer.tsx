@@ -9,6 +9,7 @@ import { RadioGroup } from "@nextui-org/radio";
 import { CheckboxGroup } from "@nextui-org/checkbox";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 import { Answer, AnswerGroup, AnswerQuestion } from "@/types/AnswerInterfaces";
 import { getAnswerById } from "@/services/answers";
@@ -28,6 +29,7 @@ interface FlattenedQuestion {
 }
 
 const AnswerViewer: React.FC<AnswerViewerProps> = ({ prefabId, answerId }) => {
+  const router = useRouter();
   const [answer, setAnswer] = useState<Answer | null>(null);
   const [flattenedQuestions, setFlattenedQuestions] = useState<
     FlattenedQuestion[]
@@ -166,14 +168,23 @@ const AnswerViewer: React.FC<AnswerViewerProps> = ({ prefabId, answerId }) => {
         >
           Back
         </Button>
-        <Button
-          color="primary"
-          endContent={<FaArrowRight />}
-          isDisabled={safeCurrentIndex === totalQuestions - 1}
-          onClick={handleNext}
-        >
-          Next
-        </Button>
+        {safeCurrentIndex === totalQuestions - 1 ? (
+          <Button
+            color="primary"
+            endContent={<FaArrowRight />}
+            onClick={() => router.push(`/prefabs/${prefabId}`)}
+          >
+            Go back to answers
+          </Button>
+        ) : (
+          <Button
+            color="primary"
+            endContent={<FaArrowRight />}
+            onClick={handleNext}
+          >
+            Next
+          </Button>
+        )}
       </div>
     </div>
   );
