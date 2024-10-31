@@ -20,6 +20,8 @@ CMD ["pnpm", "run", "dev"]
 FROM base AS production
 WORKDIR /app
 COPY . .
+# Set environment variable for production
+ENV NODE_ENV=production
 
 # Build the app
 RUN pnpm run build
