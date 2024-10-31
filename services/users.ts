@@ -2,8 +2,6 @@
 import client from "@/services/client";
 import { User, UserRolesRequest } from "@/types/UserInterfaces";
 
-const API_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}/users`;
-
 /**
  * This function retrieves the list of users by making a GET request to the API.
  * It maps the 'role' field from the API response to 'roles' in the frontend.
@@ -11,7 +9,7 @@ const API_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}/users`;
  */
 export async function getUsers(): Promise<User[]> {
   try {
-    const response = await client.get(API_URL);
+    const response = await client.get("/users");
 
     // Assuming response.data is an array of users
     return response.data.map((user: any) => ({
@@ -35,7 +33,7 @@ export async function getUsers(): Promise<User[]> {
  */
 export async function updateUserRoles(userId: string, roles: UserRolesRequest) {
   try {
-    await client.patch(`${API_URL}/${userId}`, roles);
+    await client.patch(`/users/${userId}`, roles);
   } catch (error: any) {
     const errorMessage =
       error.response?.data?.message || error.message || "Unknown error";
@@ -53,7 +51,7 @@ export async function updateUserRoles(userId: string, roles: UserRolesRequest) {
  */
 export async function deleteUser(userId: string) {
   try {
-    await client.delete(`${API_URL}/${userId}`);
+    await client.delete(`/users/${userId}`);
   } catch (error: any) {
     const errorMessage =
       error.response?.data?.message || error.message || "Unknown error";

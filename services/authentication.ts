@@ -42,6 +42,7 @@ export async function registerUser(registerUser: RegisterUserRequest) {
  */
 export async function loginUser(loginUser: LoginUserRequest) {
   try {
+    console.log(process.env.NEXT_PUBLIC_BASE_API_URL);
     const response = await client.post(`/auth/login`, loginUser);
     const jwtToken = response.data.token;
 

@@ -5,8 +5,6 @@ import {
   AnswerRequest,
 } from "@/types/AnswerInterfaces";
 
-const API_URL = process.env.NEXT_PUBLIC_BASE_API_URL + "/answers";
-
 /**
  * This function creates an answer for a given prefab by making a POST request to the API.
  * It accepts the ID of the prefab and the answer request object as parameters.
@@ -17,7 +15,7 @@ export async function createAnswer(
   answerRequest: AnswerRequest,
 ) {
   try {
-    await client.post(`${API_URL}/${prefabId}`, answerRequest);
+    await client.post(`/answers/${prefabId}`, answerRequest);
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =
@@ -51,7 +49,7 @@ export async function getAnswersByPrefabId(
       params.distance = geolocation.distance;
     }
 
-    return await client.get(`${API_URL}/${prefabId}`, { params });
+    return await client.get(`/answers/${prefabId}`, { params });
   } catch (error: any) {
     const errorMessage =
       error.response?.data?.message || error.message || "Unknown error";
@@ -64,7 +62,7 @@ export async function getAnswersByPrefabId(
 
 export async function getAnswerById(prefabId: string, answerId: string) {
   try {
-    const response = await client.get(`${API_URL}/${prefabId}/${answerId}`);
+    const response = await client.get(`/${prefabId}/${answerId}`);
 
     return response.data as Answer;
   } catch (error: any) {

@@ -14,7 +14,7 @@
     "production": "next lint && next build && next start"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.9.0",
+    "@hookform/resolvers": "^3.9.1",
     "@midudev/tailwind-animations": "^0.1.0",
     "@nextui-org/accordion": "^2.0.40",
     "@nextui-org/autocomplete": "^2.1.7",
@@ -115,7 +115,7 @@
     "react-icon-cloud": "^4.1.4",
     "react-icons": "^5.3.0",
     "react-leaflet": "^4.2.1",
-    "react-resizable-panels": "^2.1.5",
+    "react-resizable-panels": "^2.1.6",
     "react-ripples": "^2.2.1",
     "react-spring": "^9.7.4",
     "react-tweet": "^3.2.1",
@@ -130,7 +130,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@faker-js/faker": "^9.0.3",
+    "@faker-js/faker": "^9.1.0",
     "@next/eslint-plugin-next": "^14.2.16",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.2",
@@ -146,7 +146,7 @@
     "eslint-config-next": "14.2.1",
     "eslint-config-prettier": "^8.10.0",
     "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-jsx-a11y": "^6.10.1",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.37.2",
