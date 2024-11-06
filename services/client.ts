@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { getJwtToken } from "@/lib/utils";
 
-const inDevEnvironment = !!process && process.env.NODE_ENV === 'development';
+const inDevEnvironment = !!process && process.env.NODE_ENV === "development";
 
 /**
  * This creates an Axios client instance with a base URL and default headers for content type.
