@@ -17,6 +17,7 @@ import { InputType } from "@/types/FormEnums";
 import { AnswerRadio } from "@/components/public/questionnaire/answer-radio";
 import { AnswerCheckbox } from "@/components/public/questionnaire/answer-checkbox";
 import MapComponent from "@/components/public/questionnaire/map";
+import ReadOnlyMap from "@/components/private/answers/ReadOnlyMap";
 
 interface AnswerViewerProps {
   prefabId: string;
@@ -264,11 +265,7 @@ function renderReadOnlyField(question: AnswerQuestion) {
       return (
         <div className="w-full my-4">
           <div className="h-96">
-            <MapComponent
-              // @ts-ignore
-              initialPosition={{ lat, lng }}
-              onLocationChange={() => {}}
-            />
+            <ReadOnlyMap initialPosition={{ lat, lng }} />
           </div>
         </div>
       );
