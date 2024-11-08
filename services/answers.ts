@@ -62,7 +62,7 @@ export async function getAnswersByPrefabId(
 
 export async function getAnswerById(prefabId: string, answerId: string) {
   try {
-    const response = await client.get(`/${prefabId}/${answerId}`);
+    const response = await client.get(`/answers/${prefabId}/${answerId}`);
 
     return response.data as Answer;
   } catch (error: any) {
