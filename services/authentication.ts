@@ -19,7 +19,7 @@ import client from "@/services/client";
  */
 export async function registerUser(registerUser: RegisterUserRequest) {
   try {
-    return client.post("/auth/register", registerUser);
+    return await client.post("/auth/register", registerUser);
   } catch (error: any) {
     // It's better to extract meaningful error messages if possible
     const errorMessage =
@@ -42,7 +42,6 @@ export async function registerUser(registerUser: RegisterUserRequest) {
  */
 export async function loginUser(loginUser: LoginUserRequest) {
   try {
-    console.log(process.env.NEXT_PUBLIC_BASE_API_URL);
     const response = await client.post(`/auth/login`, loginUser);
     const jwtToken = response.data.token;
 

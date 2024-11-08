@@ -192,11 +192,22 @@ export function getJwtTokenData() {
 
   if (!jwtToken) return null;
 
-  const [, payload] = jwtToken.split(".");
+  const parts = jwtToken.split(".");
 
-  const decodedPayload = atob(payload);
+  if (parts.length !== 3) {
+    return null; // Invalid JWT structure
+  }
 
-  return JSON.parse(decodedPayload);
+  const payload = parts[1];
+
+  try {
+    const decodedPayload = atob(payload);
+
+    return JSON.parse(decodedPayload);
+  } catch (error) {
+    // Handle invalid base64 or JSON parsing errors
+    return null;
+  }
 }
 
 /**
@@ -213,6 +224,7 @@ export function getUserRoles() {
 
   return roles;
 }
+
 /**
  * This function checks if the user has a specific role.
  */

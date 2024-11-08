@@ -1,6 +1,7 @@
 .now/*
 *.css
 .changeset
+__mocks__
 dist
 components/ui
 components/ui/*
