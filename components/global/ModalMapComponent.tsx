@@ -5,7 +5,7 @@ import React from "react";
 import dynamic from "next/dynamic";
 import { Slider } from "@nextui-org/react";
 
-const DynamicModalMap = dynamic(() => import("./ModalMap"), {
+const DynamicModalMapNoSSR = dynamic(() => import("./ModalMapNoSSR"), {
   ssr: false,
 });
 
@@ -16,10 +16,10 @@ interface ModalMapComponentProps {
 }
 
 const ModalMapComponentFunc: React.FC<ModalMapComponentProps> = ({
-  onLocationChange,
-  onDistanceChange,
-  isModalOpen,
-}) => {
+                                                                   onLocationChange,
+                                                                   onDistanceChange,
+                                                                   isModalOpen,
+                                                                 }) => {
   const [distance, setDistance] = React.useState<number>(10);
 
   const memoizedOnDistanceChange = React.useCallback(
@@ -43,7 +43,7 @@ const ModalMapComponentFunc: React.FC<ModalMapComponentProps> = ({
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "60vh" }}>
       <div style={{ flex: "1 1 auto", position: "relative" }}>
-        <DynamicModalMap
+        <DynamicModalMapNoSSR
           isModalOpen={isModalOpen}
           onLocationChange={handleLocationChange}
         />
@@ -58,9 +58,9 @@ const ModalMapComponent = React.memo(ModalMapComponentFunc);
 ModalMapComponent.displayName = "ModalMapComponent";
 
 const SliderComponentFunc = ({
-  distance,
-  setDistance,
-}: {
+                               distance,
+                               setDistance,
+                             }: {
   distance: number;
   setDistance: React.Dispatch<React.SetStateAction<number>>;
 }) => {
