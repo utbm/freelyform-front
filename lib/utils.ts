@@ -276,3 +276,40 @@ export function throwConfettis() {
     startVelocity: 45,
   });
 }
+
+/**
+ * This function handles downloading a file in the browser.
+ * It accepts a function to fetch the file data, the desired filename, and the MIME type.
+ *
+ * @param fetchFileData - An async function that returns the file data as a Blob.
+ * @param filename - The name for the downloaded file.
+ * @param mimeType - The MIME type of the file.
+ */
+export async function downloadFile(
+  fetchFileData: () => Promise<Blob>,
+  filename: string,
+  mimeType: string = "application/octet-stream",
+): Promise<void> {
+  // Fetch the file data
+  const fileData = await fetchFileData();
+
+  // Create a Blob object from the file data
+  const blob = new Blob([fileData], { type: mimeType });
+
+  // Create a URL for the Blob object
+  const url = window.URL.createObjectURL(blob);
+
+  // Create a temporary anchor element to trigger the download
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.setAttribute("download", filename);
+  document.body.appendChild(link);
+
+  // Trigger the download
+  link.click();
+
+  // Clean up by removing the anchor and revoking the object URL
+  link.parentNode?.removeChild(link);
+  window.URL.revokeObjectURL(url);
+}

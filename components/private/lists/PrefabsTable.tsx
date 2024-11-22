@@ -44,11 +44,17 @@ import {
   SearchIcon,
   VerticalDotsIcon,
 } from "@/components/icons";
-import { capitalize, generateUniqueId, hasRole } from "@/lib/utils";
+import {
+  capitalize,
+  downloadFile,
+  generateUniqueId,
+  hasRole,
+} from "@/lib/utils";
 import {
   getPrefabs,
   deletePrefab,
   changePrefabStatus,
+  fetchPrefabExport,
 } from "@/services/prefabs"; // Import deletePrefab
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -190,6 +196,21 @@ export default function PrefabsTable() {
     }
   };
 
+  const handleDownload = React.useCallback((prefabId: string) => {
+    toast.promise(
+      downloadFile(
+        () => fetchPrefabExport(prefabId),
+        `answers_${prefabId}_${Date.now()}.xlsx`,
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      ),
+      {
+        loading: "Downloading...",
+        success: "Download started!",
+        error: (error) => `Error downloading file: ${error.message}`,
+      },
+    );
+  }, []);
+
   // Function to handle delete action
   const handleDelete = (form: Form) => {
     setSelectedPrefab(form);
@@ -284,7 +305,7 @@ export default function PrefabsTable() {
                       <span>See answers</span>
                     </div>
                   </DropdownItem>
-                  <DropdownItem>
+                  <DropdownItem onClick={() => handleDownload(form.id)}>
                     <div className="w-full flex flex-row gap-4 items-center">
                       <FaFileExcel className="w-4" />
                       <span>Download answers</span>
@@ -320,7 +341,7 @@ export default function PrefabsTable() {
           return cellValue;
       }
     },
-    [prefabsData],
+    [prefabsData, handleDownload],
   );
 
   const onRowsPerPageChange = React.useCallback(
