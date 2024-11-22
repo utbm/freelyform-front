@@ -33,6 +33,8 @@ import { ChevronDownIcon, SearchIcon } from "@/components/icons";
 import { getAnswersByPrefabId } from "@/services/answers";
 import { Answer, AnswerGeolocation } from "@/types/AnswerInterfaces";
 import ModalMapComponent from "@/components/global/ModalMapComponent";
+import { fetchPrefabExport } from "@/services/prefabs";
+import { downloadFile } from "@/lib/utils";
 
 const headerColumns = [
   { uid: "user", name: "User" },
@@ -261,9 +263,20 @@ export default function AnswersTable({ params }: { params: { id: string } }) {
     setPage(1);
   }, []);
 
-  const handleDownload = () => {
-    toast.success("Download started!");
-  };
+  const handleDownload = React.useCallback(() => {
+    toast.promise(
+      downloadFile(
+        () => fetchPrefabExport(params.id),
+        `answers_${params.id}_${Date.now()}.xlsx`,
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      ),
+      {
+        loading: "Downloading...",
+        success: "Download started!",
+        error: (error) => `Error downloading file: ${error.message}`,
+      },
+    );
+  }, [params.id]);
 
   const topContent = React.useMemo(() => {
     return (

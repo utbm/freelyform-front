@@ -146,3 +146,34 @@ export async function getPrefabs() {
     );
   }
 }
+
+/**
+ * This function exports a prefab by making a GET request to the API.
+ * It accepts the prefab identifier as a parameter.
+ * It returns the file data as a Blob.
+ * If there's an error, it extracts a meaningful error message and throws a new error with the message.
+ */
+export async function fetchPrefabExport(
+  prefabIdentifier: string,
+): Promise<Blob> {
+  try {
+    const response = await client.get(
+      `/prefabs/prefab/${prefabIdentifier}/export`,
+      {
+        responseType: "blob",
+      },
+    );
+
+    return response.data as Blob;
+  } catch (error: any) {
+    const errorMessage =
+      error.response?.data?.technicalMessage ||
+      error.response?.data?.message ||
+      error.message ||
+      "Unknown error";
+
+    throw new Error(
+      `An error occurred while exporting the prefab: ${errorMessage}`,
+    );
+  }
+}
